@@ -14,3 +14,4 @@ header.appendChild(subHeading);
 const secDiv = document.querySelector('div:nth-of-type(2)');
 const ul = document.querySelector('ul');
 secDiv.insertBefore(totalFruit, ul);
+
