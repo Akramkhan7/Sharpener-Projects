@@ -35,12 +35,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // fruit name
     const nameText = document.createTextNode(fruitNameInput.value);
 
-    // description (italic, next line)
+
     const descPara = document.createElement("p");
     descPara.style.fontStyle = "italic";
     descPara.textContent = fruitDesc;
 
-    // delete button
     const deleteBtn = document.createElement("button");
     deleteBtn.className = "delete-btn";
     deleteBtn.textContent = "x";
@@ -88,5 +87,4 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
-
 });
