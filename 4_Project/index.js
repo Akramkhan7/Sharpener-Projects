@@ -14,7 +14,6 @@ class Student{
 }
 
 
-// Do not touch anything below this line
 
 function createNewStudents(name, age, marks){
   const Riya = new Student(name, age, marks);
