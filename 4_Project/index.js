@@ -15,7 +15,7 @@ class Student{
 
 
 
-function createNewStudents(name, age, marks){
+function createNewStudents(name, age, marks){ //ngres
   const Riya = new Student(name, age, marks);
   console.log(Riya.setPlacementAge(18)(40));
 }
