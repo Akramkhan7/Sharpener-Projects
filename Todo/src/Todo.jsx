@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 
 const Todo = () => {
   const [task, setTask] = useState("");
+  const [editId, setEditId] = useState(null);
+  const [search, setSearch] = useState('');
+  const [categoryFilter,setCategoryFilter] = useState('All Categories')
   const [tasks, setTasks] = useState(() => {
     try {
       const data = JSON.parse(localStorage.getItem("tasks")) || [];
@@ -13,17 +16,46 @@ const Todo = () => {
   const [category, setCategory] = useState("Work");
   const [priority, setPriority] = useState("Low");
 
+  let finalTask = tasks;
+
+  if(search){
+    finalTask =  finalTask.filter((t)=>
+       t.title.toLowerCase().includes(search.toLowerCase())
+    )
+  }
+
+  if(categoryFilter !== 'All Categories'){
+    finalTask = finalTask.filter((t)=>
+      t.category === categoryFilter
+    )
+  }
+
   const handleTask = () => {
     if (task.trim() === "") return;
-    const newTask = {
-      id: Date.now(),
-      title: task,
-      completed: false,
-      category,
-      priority,
-    };
-    setTasks([...tasks, newTask]);
-    setTask("");
+
+    if (editId !== null) {
+
+      const update = tasks.map((t) =>
+        t.id === editId ? { ...t, title: task,category,priority } : t,
+      );
+      setTasks(update);
+      setEditId("");
+      setTask("");
+
+    } 
+    else
+       {
+      const newTask = {
+        id: Date.now(),
+        title: task,
+        completed: false,
+        category,
+        priority,
+      };
+      setTasks([...tasks, newTask]);
+      setTask("");
+
+    }
   };
 
   const deleteTask = (id) => {
@@ -43,13 +75,15 @@ const Todo = () => {
     setTasks(updatedData);
   };
 
-  const editTask = (id) => {
-    const editId = tasks.map((t) =>{
-      if(t.id === id){
-        
-      }
-    })
-  };
+
+const filteredTasks = tasks.filter((t) =>
+  t.title.toLowerCase().includes(search.toLowerCase())
+);
+
+const categoryFilteredTasks = tasks.filter((t) => {
+  if (categoryFilter === "All Categories") return true;
+  return t.category === categoryFilter;
+});
 
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -105,19 +139,23 @@ const Todo = () => {
           {/* Search */}
           <input
             type="text"
+            onChange={(e)=>setSearch(e.target.value)}
             placeholder="Search tasks..."
             className="px-4 py-2 border rounded-lg w-full md:w-1/3"
           />
 
           {/* Filters */}
           <div className="flex gap-2 flex-wrap">
-            <select className="px-3 py-2 border rounded-lg">
+            <select className="px-3 py-2 border rounded-lg" 
+            >
               <option>All</option>
               <option>Completed</option>
               <option>Pending</option>
             </select>
 
-            <select className="px-3 py-2 border rounded-lg">
+            <select className="px-3 py-2 border rounded-lg"
+            value={categoryFilter}
+            onChange={(e)=>setCategoryFilter(e.target.value)}>
               <option>All Categories</option>
               <option>Work</option>
               <option>Personal</option>
@@ -135,7 +173,8 @@ const Todo = () => {
 
       {/* Task List */}
       <div className="mt-6 w-full max-w-4xl space-y-3">
-        {tasks.map((t) => (
+       {finalTask.length === 0 ?  <h2>No matched found!</h2> : 
+        finalTask.map((t) => (
           <div
             key={t.id}
             className="bg-white p-4 rounded-lg shadow flex justify-between items-center"
@@ -164,7 +203,12 @@ const Todo = () => {
             <div className="flex gap-2">
               <button
                 className="px-3 py-1 border rounded"
-                onClick={() => editTask(t.id)}
+                onClick={() => {
+                  setEditId(t.id);
+                  setTask(t.title)
+                  setCategory(t.category);
+                  setPriority(t.priority);
+                }}
               >
                 Edit
               </button>
@@ -176,7 +220,14 @@ const Todo = () => {
               </button>
             </div>
           </div>
-        ))}
+        ))
+       }
+         
+       
+
+        
+       
+
       </div>
 
       {/* Pagination */}
