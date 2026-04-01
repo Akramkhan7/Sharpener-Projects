@@ -27,7 +27,6 @@ const Todo = () => {
 
   let finalTask = tasks;
 
-
   if (search) {
     finalTask = finalTask.filter((t) =>
       t.title.toLowerCase().includes(search.toLowerCase()),
@@ -45,11 +44,10 @@ const Todo = () => {
     });
   }
 
-    const totalPages = Math.ceil(finalTask.length / itemsPerPage);
+  const totalPages = Math.ceil(finalTask.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedTasks = finalTask.slice(startIndex,endIndex);
-
+  const paginatedTasks = finalTask.slice(startIndex, endIndex);
 
   const handleTask = () => {
     if (task.trim() === "") return;
@@ -136,6 +134,12 @@ const Todo = () => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
+  useEffect(() => {
+    const totalPages = Math.ceil(finalTask.length / itemsPerPage);
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+  }, [finalTask, currentPage]);
   return (
     <div className="min-h-screen w-full bg-gray-100 flex flex-col items-center p-6">
       {/* Header */}
@@ -279,40 +283,38 @@ const Todo = () => {
         )}
       </div>
       {/* Pagination */}
-     <div className="mt-6 flex gap-2 items-center">
+      <div className="mt-6 flex gap-2 items-center">
+        {/* Prev */}
+        <button
+          onClick={() => setCurrentPage((p) => p - 1)}
+          disabled={currentPage === 1}
+          className="px-3 py-1 border rounded disabled:opacity-50"
+        >
+          Previous
+        </button>
 
-  {/* Prev */}
-  <button
-    onClick={() => setCurrentPage((p) => p - 1)}
-    disabled={currentPage === 1}
-    className="px-3 py-1 border rounded disabled:opacity-50"
-  >
-    Previous
-  </button>
+        {/* Page Numbers */}
+        {[...Array(totalPages)].map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrentPage(i + 1)}
+            className={`px-3 py-1 border rounded ${
+              currentPage === i + 1 ? "bg-black text-white" : ""
+            }`}
+          >
+            {i + 1}
+          </button>
+        ))}
 
-  {/* Page Numbers */}
-  {[...Array(totalPages)].map((_, i) => (
-    <button
-      key={i}
-      onClick={() => setCurrentPage(i + 1)}
-      className={`px-3 py-1 border rounded ${
-        currentPage === i + 1 ? "bg-black text-white" : ""
-      }`}
-    >
-      {i + 1}
-    </button>
-  ))}
-
-  {/* Next */}
-  <button
-    onClick={() => setCurrentPage((p) => p + 1)}
-    disabled={currentPage === totalPages}
-    className="px-3 py-1 border rounded disabled:opacity-50"
-  >
-    Next
-  </button>
-
-</div>
+        {/* Next */}
+        <button
+          onClick={() => setCurrentPage((p) => p + 1)}
+          disabled={currentPage === totalPages}
+          className="px-3 py-1 border rounded disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };
