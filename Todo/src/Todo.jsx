@@ -140,12 +140,67 @@ const Todo = () => {
       setCurrentPage(totalPages);
     }
   }, [finalTask, currentPage]);
+
+  const [showPopup, setShowPopup] = useState(false);
+  const addTimer = () => {
+    setShowPopup(true);
+  };
+  const [timer, setTimer] = useState(0);
+  const [breakTimer, setBreakTimer] = useState(0);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+
+  const submitTimer = () => {
+    if (!timer || !breakTimer) {
+      return;
+    }
+    localStorage.setItem("timer", JSON.stringify(timer));
+    localStorage.setItem("breakTimer", JSON.stringify(breakTimer));
+    setIsTimerRunning(true);
+    setInterval(() => {
+      if (timer <= 0) {
+        setBreakTimer((prev) => prev - 1);
+      } else {
+        setTimer((prev) => prev - 1);
+      }
+    }, 1000);
+    setShowPopup(false);
+  };
+
+
+
+
+
+
+
+  // useEffect(() => {
+  //   if (!isTimerRunning) return;
+  //   if (isTimerRunning && timer) {
+  //     setTimer((prev) => prev - 1);
+  //   } else if (isTimerRunning && timer == 0) {
+  //     setBreakTimer((prev) => prev - 1);
+  //   } else if (isTimerRunning && breakTimer == 0) {
+  //     alert("All done");
+  //     setTimer(0);
+  //     setBreakTimer(0);
+  //     setIsTimerRunning(false);
+  //     return;
+  //   }
+  // }, [timer, breakTimer]);
+
   return (
     <div className="min-h-screen w-full bg-gray-100 flex flex-col items-center p-6">
       {/* Header */}
       <h1 className="text-3xl font-bold mb-6">Todo App</h1>
       {/* Top Controls */}
       <div className="w-full max-w-4xl bg-white p-4 rounded-xl shadow space-y-4">
+        {isTimerRunning &&
+          (timer >= 0 ? (
+            <div className="bg-blue-600 w-[4vw] p-2 rounded-2xl ">{timer}</div>
+          ) : (
+            <div className="bg-blue-600 w-[4vw] p-2 rounded-2xl ">
+              {breakTimer}
+            </div>
+          ))}
         {/* Add Task */}
         <div className="flex gap-2 flex-wrap">
           <input
@@ -315,6 +370,30 @@ const Todo = () => {
           Next
         </button>
       </div>
+
+      <button className="p-4 bg-black text-white mt-10" onClick={addTimer}>
+        Add timer
+      </button>
+
+      {showPopup && (
+        <div className="absolute top-60 w-[30vw] h-[10vh] flex flex-col gap-2">
+          <div className="bg-red-500">
+            <input type="text" onChange={(e) => setTimer(e.target.value)} />
+          </div>
+          <div className="bg-red-500">
+            <input
+              type="text"
+              onChange={(e) => setBreakTimer(e.target.value)}
+            />
+          </div>
+          <button
+            className="p-4 bg-black text-white mt-10"
+            onClick={submitTimer}
+          >
+            submit
+          </button>
+        </div>
+      )}
     </div>
   );
 };
