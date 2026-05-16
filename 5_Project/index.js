@@ -36,7 +36,7 @@ submit.addEventListener("click", (e) => {
 
   showItem(curritem);
 
-  // Clear inputs
+
   Amount.value = "";
   Description.value = "";
   Category.value = "";
