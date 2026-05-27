@@ -1,24 +1,26 @@
 const inputVal = document.querySelectorAll(".form-control");
 const submitBtn = document.querySelector(".btn");
 
+const baseURL =
+  "https://crudcrud.com/api/a0a29e0bfb6f4741948187976ce1a125/vegetables";
+
 submitBtn.addEventListener("click", (e) => {
   e.preventDefault();
 
-  const vegname = inputVal[0].value;
-  const vegprice = inputVal[1].value;
-  let vegquantity = Number(inputVal[2].value);
+  const vegName = inputVal[0].value;
+  const vegPrice = inputVal[1].value;
+  let vegQnty = inputVal[2].value;
 
   const vegList = document.querySelector(".list-unstyled");
 
   const li = document.createElement("li");
-  li.className =
-    "veg-item d-flex justify-content-between align-items-center";
+  li.className = "veg-item d-flex justify-content-between align-items-center";
 
   li.innerHTML = `
     <div class="veg-info d-flex gap-4 align-items-center">
-        <p class="m-0">${vegname}</p>
-        <p class="m-0">₹${vegprice}</p>
-        <p class="m-0 quantity-text">${vegquantity} Kg</p>
+        <p class="m-0">${vegName}</p>
+        <p class="m-0">₹${vegPrice}</p>
+        <p class="m-0 quantity-text">${vegQnty} Kg</p>
     </div>
   `;
 
@@ -51,30 +53,47 @@ submitBtn.addEventListener("click", (e) => {
 
   vegList.appendChild(li);
 
+  axios
+    .post(baseURL, {
+      name: vegName,
+      price: vegPrice,
+      quantity: vegQnty,
+    })
+    .then((res) => {
+      console.log(res.data);
+      li.dataset.id = res.data._id;
+    })
+    .catch((err) => console.log(err));
+
   // Delete
   deleteBtn.addEventListener("click", () => {
-    li.remove();
+    axios.delete(`${baseURL}/${li.dataset.id}`).then((res) => li.remove());
   });
 
   // Buy logic
   buyBtn.addEventListener("click", () => {
-    const buyQty = Number(buyInput.value);
+    const buyQty = buyInput.value;
 
     if (buyQty <= 0) {
       alert("Enter valid quantity");
       return;
     }
 
-    if (buyQty > vegquantity) {
+    if (buyQty > vegQnty) {
       alert("Not enough stock!");
       return;
     }
 
-    vegquantity -= buyQty;
+    vegQnty -= buyQty;
 
-    li.querySelector(
-      ".quantity-text"
-    ).textContent = `${vegquantity} Kg`;
+    li.querySelector(".quantity-text").textContent = `${vegQnty} Kg`;
+
+    axios.put(`${baseURL}/${li.dataset.id}`, {
+      id: li.dataset.id,
+      name: vegName,
+      price: vegPrice,
+      quantity: vegQnty,
+    });
 
     buyInput.value = "";
   });
