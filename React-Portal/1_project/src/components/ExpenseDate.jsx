@@ -1,35 +1,17 @@
-import React from 'react'
+import "./ExpenseDate.css";
 
 function ExpenseDate(props) {
-
-    const months = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-
-
-  const month = months[props.date.getMonth()];
+  const month = props.date.toLocaleString("en-US", { month: "long" });
   const year = props.date.getFullYear();
-  const date = props.date.getDate();
-
+  const day = props.date.toLocaleString("en-US", { day: "2-digit" });
 
   return (
-    <div>
-        <div>{month}</div>
-        <div>{year}</div>
-        <div>{date}</div>
-      </div>
-  )
+    <div className="expense-date">
+      <div className="expense-date__month">{month}</div>
+      <div className="expense-date__year">{year}</div>
+      <div className="expense-date__day">{day}</div>
+    </div>
+  );
 }
 
-export default ExpenseDate
+export default ExpenseDate;

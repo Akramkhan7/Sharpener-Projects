@@ -1,18 +1,29 @@
+import ExpenseDate from "./ExpenseDate";
+import Card from "./Card";
 import "./ExpenseItem.css";
-import ExpenseDate from "./ExpenseDate.jsx";
-import Expenses from "./Expenses.jsx";
+import { useState } from "react";
 
 
+const ExpenseItem = (props)=> {
 
-function ExpenseItem(props) {
+const [title, setTitle] = useState(props.title);
 
+function changeTitle(){
+  console.log("button clicked");
+  setTitle('New Title');
+}
 
   return (
-    <div className="expense-item">
-     <ExpenseDate date={props.date}></ExpenseDate>
+    <Card className="expense-item">
+      <ExpenseDate date={props.date} />
 
-     <Expenses title={props.title} price={props.price}></Expenses>
-    </div>
+      <div className="expense-item__description">
+        <h2>{title}</h2>
+
+        <div className="expense-item__price">${props.price}</div>
+        <button onClick={changeTitle} >Change title</button>
+      </div>
+    </Card>
   );
 }
 
