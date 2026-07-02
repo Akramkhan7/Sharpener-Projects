@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Card from "../UI/Card";
 
 const AddUser = () => {
   const [username, setUsername] = useState("");
@@ -49,23 +50,25 @@ const AddUser = () => {
     </div>
   ) : (
     <div>
-      <form onSubmit={addUserHandler}>
-        <label>Username</label>
-        <input type="text" value={username} onChange={userNameHandle} />
+      <Card className='input'>
+        <form onSubmit={addUserHandler}>
+          <label>Username</label>
+          <input type="text" value={username} onChange={userNameHandle} />
 
-        <label>Age</label>
-        <input type="text" value={age} onChange={ageHandler} />
+          <label>Age</label>
+          <input type="text" value={age} onChange={ageHandler} />
 
-        <button type="submit">Add User</button>
-      </form>
+          <button type="submit">Add User</button>
+        </form>
 
-      <div>
-        {users.map((user, index) => (
-          <h3 key={index}>
-            {user.username} ({user.age} years old)
-          </h3>
-        ))}
-      </div>
+        <div>
+          {users.map((user, index) => (
+            <h3 key={index}>
+              {user.username} ({user.age} years old)
+            </h3>
+          ))}
+        </div>
+      </Card>
     </div>
   )}
 </div>
