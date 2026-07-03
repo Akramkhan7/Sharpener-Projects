@@ -11,9 +11,21 @@ function CartProvider(props) {
       return [...prev, item];
     });
   };
-  const removeItemToCartHandler = () => {};
+  const removeItemToCartHandler = (id) => {
+    setItems((prevItems) =>
+      prevItems.map((item) => {
+        if (item.id === id) {
+          return {
+            ...item,
+            amount: Math.max(item.amount - 1, 1),
+          };
+        }
+        return item;
+      }),
+    );
+  };
 
-   const totalAmount = items.reduce((total, item) => {
+  const totalAmount = items.reduce((total, item) => {
     return total + item.price * item.amount;
   }, 0);
 

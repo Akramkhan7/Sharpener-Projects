@@ -1,0 +1,57 @@
+.main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #8a2b06;
+}
+
+.container h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+  color: #363636;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.item span:first-child {
+  color: #8a2b06;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.item span:last-child {
+  border: 1px solid #ccc;
+  padding: 0.2rem 0.8rem;
+  border-radius: 6px;
+  font-weight: bold;
+  background: #fff;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.actions button {
+  width: 3rem;
+  height: 2rem;
+  border: 1px solid #8a2b06;
+  border-radius: 6px;
+  background: white;
+  color: #8a2b06;
+  font-size: 1.25rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.actions button:hover,
+.actions button:active {
+  background: #8a2b06;
+  color: white;
+}
