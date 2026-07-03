@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import classes from "./Header.module.css";
 import CartIcon from "../Cart/CartIcon";
+import CartContext from "../../store/CartContent";
 
 function Header(props) {
+  const cartCtx = useContext(CartContext);
+  const len  = cartCtx.items.length;
   return (
     <>
       <header className={classes.header}>
@@ -12,7 +15,7 @@ function Header(props) {
             <CartIcon />
           </span>
           <span>Your Cart</span>
-          <span className={classes.badge}>3</span>
+          <span className={classes.badge}>{len}</span>
         </button>
       </header>
 
