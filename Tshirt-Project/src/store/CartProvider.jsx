@@ -16,7 +16,7 @@ const CartProvider = ({ children }) => {
 
     if (!selectedProduct) return;
 
-    setCartItems.map((prevItems) => {
+    setCartItems((prevItems) => {
       const exist = prevItems.find((item) => item.id === id);
       if (exist) {
         return prevItems.map((item) => {
@@ -41,6 +41,7 @@ const CartProvider = ({ children }) => {
           small: size === "small" ? 1 : 0,
         },
       ];
+      
     });
 
     //QNY DECREASE

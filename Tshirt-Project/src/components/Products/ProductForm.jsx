@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { useState } from "react";
 import CartContext from "../../store/CartContext";
+import classes from "./Products.module.css"
 
 function ProductForm({ setProducts }) {
   const [tshirtName, setTshirtName] = useState("");
@@ -28,18 +29,18 @@ function ProductForm({ setProducts }) {
 
     cartCtx.addProduct(data);
 
-    // setTshirtName("");
-    // setDescription("");
-    // setPrice("");
-    // setLargeQty("");
-    // setMediumQty("");
-    // setSmallQty("");
+    setTshirtName("");
+    setDescription("");
+    setPrice("");
+    setLargeQty("");
+    setMediumQty("");
+    setSmallQty("");
 
    
   };
 
   return (
-    <form onSubmit={onSubmitHandler}>
+    <form onSubmit={onSubmitHandler} className={classes["product-form"]}>
       <label>T-Shirt Name</label>
       <input
         type="text"
