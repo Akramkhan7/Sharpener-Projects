@@ -43,7 +43,6 @@ const [listening, setListening] = useState(false);
         contents: prompt,
       });
 
-      console.log(res);
 
       const responseText = res.text;
 
@@ -64,7 +63,6 @@ const [listening, setListening] = useState(false);
 
       setExpenses((prev) => [...prev, newExpense]);
 
-      console.log("Parsed object:", data); // JS object you can use
 
       setAiInput("");
     } catch (error) {
