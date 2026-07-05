@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
-import { useState } from "react";
+import React, { useContext, useState } from "react";
 import CartContext from "../../store/CartContext";
-import classes from "./Products.module.css"
+import classes from "./Products.module.css";
+import { GoogleGenAI } from "@google/genai";
 
 function ProductForm({ setProducts }) {
   const [tshirtName, setTshirtName] = useState("");
@@ -11,6 +11,55 @@ function ProductForm({ setProducts }) {
   const [largeQty, setLargeQty] = useState("");
   const [mediumQty, setMediumQty] = useState("");
   const [smallQty, setSmallQty] = useState("");
+
+  const [suggestion, setSuggestion] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const getSuggestion = async () => {
+    if (!tshirtName.trim() || !price) {
+      setSuggestion("Please enter a product name and price first.");
+      return;
+    }
+
+    const apiKey = process.env.REACT_APP_GEMINI_API_KEY || "";
+
+    if (!apiKey) {
+      setSuggestion("AI is not configured. Add REACT_APP_GEMINI_API_KEY to your .env file and restart the app.");
+      return;
+    }
+
+    setLoading(true);
+    setSuggestion("");
+
+    try {
+      const ai = new GoogleGenAI({ apiKey });
+      const prompt = `
+    Product Name: ${tshirtName}
+    Current Price: ₹${price}
+
+    Suggest whether this is a good selling price.
+    If not, recommend a better price in 2-3 lines.
+    `;
+
+      const res = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: prompt,
+      });
+
+      setSuggestion(res.text || "No suggestion returned.");
+    } catch (error) {
+      console.error(error);
+
+      const message =
+        error?.status === 429 || /quota|rate limit/i.test(error?.message || "")
+          ? "Google AI quota has been exceeded for this key. Please try again later or use a different API key."
+          : "Unable to generate suggestion right now.";
+
+      setSuggestion(message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const cartCtx = useContext(CartContext);
 
@@ -35,8 +84,6 @@ function ProductForm({ setProducts }) {
     setLargeQty("");
     setMediumQty("");
     setSmallQty("");
-
-   
   };
 
   return (
@@ -90,6 +137,18 @@ function ProductForm({ setProducts }) {
       />
 
       <button type="submit">Add Product</button>
+      <button type="button" onClick={getSuggestion}>
+        Get AI Suggestion
+      </button>
+
+      {loading && <p>Generating suggestion...</p>}
+
+      {suggestion && (
+        <div>
+          <h3>AI Suggestion</h3>
+          <p>{suggestion}</p>
+        </div>
+      )}
     </form>
   );
 }
