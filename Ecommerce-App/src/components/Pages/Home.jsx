@@ -12,11 +12,7 @@ function Home() {
   const timerRef = useRef();
 
   const addMovieHandler = (movie) => {
-    setMovies((prev) => {
-      const updated = [...prev, movie];
-      console.log(updated);
-       return updated;
-    });
+    console.log(movie);
   };
   const fetchMovies = useCallback(async () => {
     setIsLoading(true);
@@ -85,7 +81,7 @@ function Home() {
         )}
 
         {!isLoading &&
-        movies.slice().reverse().map((movie) => (
+        movies.map((movie) => (
             <div
               key={movie.episode_id}
               className="border rounded p-4 mb-3 shadow-sm"
