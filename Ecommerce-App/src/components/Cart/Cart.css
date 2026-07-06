@@ -1,0 +1,14 @@
+.cart-modal {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  margin: 0;
+}
+
+.cart-modal .modal-content {
+  width: 400px;
+}
+
+.cart-modal .modal-dialog {
+  margin: 0;
+}

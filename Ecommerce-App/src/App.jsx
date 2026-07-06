@@ -1,12 +1,27 @@
-import React from 'react'
-import ProductList from './components/Products/ProductList'
+import { useState } from 'react';
+import Cart from './components/Cart/Cart.jsx';
+import Header from './components/Layout/Header.jsx';
+import ProductList from './components/Products/ProductList.jsx';
 
 function App() {
+  const [showCart, setShowCart] = useState(false);
+
+  const showCartHandler = () => {
+    setShowCart(true);
+  };
+
+  const hideCartHandler = () => {
+    setShowCart(false);
+  };
+
   return (
-    <div>
+    <>
+      <Cart show={showCart} onHide={hideCartHandler} />
+      <Header onShow={showCartHandler} />
       <ProductList />
-    </div>
-  )
+    </>
+  );
 }
 
-export default App
+export default App;
+

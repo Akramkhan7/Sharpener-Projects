@@ -1,5 +1,5 @@
-import Products from "./products";
-import ProductItem from "./ProductItem";
+import Products from "./products.js";
+import ProductItem from "./ProductItem.jsx";
 
 function ProductList() {
   return (

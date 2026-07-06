@@ -1,4 +1,4 @@
-const Products = [
+const products = [
   {
     title: "Colors",
 
@@ -32,4 +32,4 @@ const Products = [
   },
 ];
 
-export default Products;
+export default products;
