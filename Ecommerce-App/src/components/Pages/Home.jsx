@@ -1,87 +1,64 @@
+import { useState, useEffect } from "react";
 import Hero from "../Layout/Hero";
-import { Button, Container, Row, Col } from "react-bootstrap";
+import { Container, Button } from "react-bootstrap";
+import Spinner from "react-bootstrap/Spinner";
 
 function Home() {
-  const tours = [
-    {
-      id: 1,
-      date: "JUL 16",
-      city: "DETROIT, MI",
-      venue: "DTE ENERGY MUSIC THEATRE",
-    },
-    {
-      id: 2,
-      date: "JUL 19",
-      city: "TORONTO, ON",
-      venue: "BUDWEISER STAGE",
-    },
-    {
-      id: 3,
-      date: "JUL 22",
-      city: "BRISTOW, VA",
-      venue: "JIGGY LUBE LIVE",
-    },
-    {
-      id: 4,
-      date: "JUL 29",
-      city: "PHOENIX, AZ",
-      venue: "AK-CHIN PAVILION",
-    },
-    {
-      id: 5,
-      date: "AUG 2",
-      city: "LAS VEGAS, NV",
-      venue: "T-MOBILE ARENA",
-    },
-    {
-      id: 6,
-      date: "AUG 7",
-      city: "CONCORD, CA",
-      venue: "CONCORD PAVILION",
-    },
-  ];
+  const [isLoading, setIsLoading] = useState(false);
+  const [movies, setMovies] = useState([]);
 
-  async function getMovies() {
-    const res = await fetch("https://swapi.info/api/films");
-    const x = await res.json();;
-    console.log(x);
-  }
+  const fetchMovies = async () => {
+    setIsLoading(true);
 
-  getMovies();
+    try {
+      const response = await fetch("https://swapi.info/api/films");
+      const data = await response.json();
+
+      console.log(data);
+      setMovies(data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMovies();
+  }, []);
+
   return (
     <>
       <Hero />
 
       <Container className="py-5">
-        <h2 className="text-center fw-bold mb-5">TOURS</h2>
+        <h2 className="text-center mb-5">Movies</h2>
 
-        {tours.map((tour) => (
-          <Row
-            key={tour.id}
-            className="align-items-center border-bottom py-3"
-          >
-            <Col md={2} className="fw-bold">
-              {tour.date}
-            </Col>
+        {isLoading && (
+          <div className="w-full h-full text-center">
+            <Spinner animation="border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          </div>
+        )}
 
-            <Col md={3} className="text-secondary">
-              {tour.city}
-            </Col>
+        {!isLoading &&
+          movies.map((movie) => (
+            <div
+              key={movie.episode_id}
+              className="border rounded p-4 mb-3 shadow-sm"
+            >
+              <h4>{movie.title}</h4>
 
-            <Col md={5} className="text-secondary">
-              {tour.venue}
-            </Col>
+              <p>
+                <strong>Director:</strong> {movie.director}
+              </p>
 
-            <Col md={2} className="text-end">
-              <Button
-                variant="info"
-                className="text-white fw-bold px-4"
-              >
+              <Button variant="info" className="text-white fw-bold">
                 BUY TICKETS
               </Button>
-            </Col>
-          </Row>
-        ))}
+            </div>
+          ))}
       </Container>
     </>
   );
