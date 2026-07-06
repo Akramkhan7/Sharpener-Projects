@@ -41,6 +41,13 @@ function Home() {
     },
   ];
 
+  async function getMovies() {
+    const res = await fetch("https://swapi.info/api/films");
+    const x = await res.json();;
+    console.log(x);
+  }
+
+  getMovies();
   return (
     <>
       <Hero />
