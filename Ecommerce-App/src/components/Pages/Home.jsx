@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Hero from "../Layout/Hero";
 import { Container, Button } from "react-bootstrap";
 import Spinner from "react-bootstrap/Spinner";
@@ -10,11 +10,11 @@ function Home() {
   const [error, setError] = useState("");
   const timerRef = useRef();
 
-  const fetchMovies = async () => {
+  const fetchMovies = useCallback (async () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("https://swapi.info/api/film");
+      const response = await fetch("https://swapi.info/api/films");
 
       if (!response.ok) {
         throw new Error("Something went wrong... Retrying");
@@ -29,11 +29,11 @@ function Home() {
     } finally {
       setIsLoading(false);
     }
-  };
+  },[])
 
   useEffect(() => {
     fetchMovies();
-  }, []);
+  }, [fetchMovies]);
 
   useEffect(() => {
     if (retry && error) {
