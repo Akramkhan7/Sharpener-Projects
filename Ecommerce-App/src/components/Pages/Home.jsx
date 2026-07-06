@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Hero from "../Layout/Hero";
 import { Container, Button } from "react-bootstrap";
 import Spinner from "react-bootstrap/Spinner";
@@ -6,18 +6,26 @@ import Spinner from "react-bootstrap/Spinner";
 function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [movies, setMovies] = useState([]);
+  const [retry, setRetry] = useState(true);
+  const [error, setError] = useState("");
+  const timerRef = useRef();
 
   const fetchMovies = async () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("https://swapi.info/api/films");
+      const response = await fetch("https://swapi.info/api/film");
+
+      if (!response.ok) {
+        throw new Error("Something went wrong... Retrying");
+      }
+
       const data = await response.json();
 
-      console.log(data);
       setMovies(data);
+      setError("");
     } catch (error) {
-      console.log(error);
+      setError(error.message);
     } finally {
       setIsLoading(false);
     }
@@ -26,6 +34,16 @@ function Home() {
   useEffect(() => {
     fetchMovies();
   }, []);
+
+  useEffect(() => {
+    if (retry && error) {
+      const timer = setTimeout(() => {
+        fetchMovies();
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [error, retry]);
 
   return (
     <>
@@ -40,6 +58,21 @@ function Home() {
               <span className="visually-hidden">Loading...</span>
             </Spinner>
           </div>
+        )}
+
+        {error && (
+          <>
+            <h4>Error{error}</h4>
+            <Button
+              variant="danger"
+              onClick={() => {
+                setRetry(false);
+                setError("Retry cancelled.");
+              }}
+            >
+              Cancel Retry
+            </Button>
+          </>
         )}
 
         {!isLoading &&
