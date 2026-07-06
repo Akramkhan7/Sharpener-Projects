@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Hero from "../Layout/Hero";
 import { Container, Button } from "react-bootstrap";
 import Spinner from "react-bootstrap/Spinner";
+import Form from "../Layout/Form";
 
 function Home() {
   const [isLoading, setIsLoading] = useState(false);
@@ -10,7 +11,14 @@ function Home() {
   const [error, setError] = useState("");
   const timerRef = useRef();
 
-  const fetchMovies = useCallback (async () => {
+  const addMovieHandler = (movie) => {
+    setMovies((prev) => {
+      const updated = [...prev, movie];
+      console.log(updated);
+       return updated;
+    });
+  };
+  const fetchMovies = useCallback(async () => {
     setIsLoading(true);
 
     try {
@@ -29,7 +37,7 @@ function Home() {
     } finally {
       setIsLoading(false);
     }
-  },[])
+  }, []);
 
   useEffect(() => {
     fetchMovies();
@@ -47,7 +55,8 @@ function Home() {
 
   return (
     <>
-      <Hero />
+      <Form onSubmit={addMovieHandler} />
+      
 
       <Container className="py-5">
         <h2 className="text-center mb-5">Movies</h2>
@@ -76,7 +85,7 @@ function Home() {
         )}
 
         {!isLoading &&
-          movies.map((movie) => (
+        movies.slice().reverse().map((movie) => (
             <div
               key={movie.episode_id}
               className="border rounded p-4 mb-3 shadow-sm"

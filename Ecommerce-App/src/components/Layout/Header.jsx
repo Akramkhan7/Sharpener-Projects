@@ -13,31 +13,33 @@ function Header({ onShow }) {
   const showCartButton = location.pathname === "/store";
 
   return (
-    <Navbar bg="dark" variant="dark">
-      <Container>
-        <Navbar.Brand as={NavLink} to="/">
-          The Generics
-        </Navbar.Brand>
+   <Navbar bg="dark" variant="dark" expand="lg">
+  <Container>
+    <Navbar.Brand as={NavLink} to="/">
+      The Generics
+    </Navbar.Brand>
 
-        <Nav className="me-auto">
-          <NavLink to="/" end>
-            Home
-          </NavLink>
-          <NavLink to="/store">
-            Store
-          </NavLink>
-          <NavLink to="/about">
-            About
-          </NavLink>
-        </Nav>
+    <Nav className="mx-auto">
+      <Nav.Link as={NavLink} to="/" end>
+        Home
+      </Nav.Link>
 
-        {showCartButton && (
-          <Button variant="outline-light" onClick={onShow}>
-            Cart {len}
-          </Button>
-        )}
-      </Container>
-    </Navbar>
+      <Nav.Link as={NavLink} to="/store">
+        Store
+      </Nav.Link>
+
+      <Nav.Link as={NavLink} to="/about">
+        About
+      </Nav.Link>
+    </Nav>
+
+    {showCartButton && (
+      <Button variant="outline-light" onClick={onShow}>
+        Cart ({len})
+      </Button>
+    )}
+  </Container>
+</Navbar>
   );
 }
 
