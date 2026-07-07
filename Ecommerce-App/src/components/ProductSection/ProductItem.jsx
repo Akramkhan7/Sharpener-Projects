@@ -3,21 +3,27 @@ import { Link } from "react-router-dom";
 import './Products.css';
 
 function ProductItem({ product }) {
- return (
-    <div className="product-item">
-      <Link to={`/products/${product.id}`}>
-        <img
-          src={product.imageUrl}
-          alt={product.title}
-          className="product-image"
-        />
+  return (
+    <div className="card">
 
-        <h3 className="product-title">{product.title}</h3>
-      </Link>
+      <img
+        src={product.imageUrl}
+        alt={product.title}
+        className="card-image"
+      />
 
-      <p className="product-price">₹{product.price}</p>
+      <div className="card-body">
 
-      <button className="product-btn">Add To Cart</button>
+        <h3>{product.title}</h3>
+
+        <h2>₹ {product.price}</h2>
+
+        <Link to={`/products/${product.id}`}>
+          <button>View Details</button>
+        </Link>
+
+      </div>
+
     </div>
   );
 }
