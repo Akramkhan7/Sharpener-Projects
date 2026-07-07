@@ -11,29 +11,63 @@ function Home() {
   const [error, setError] = useState("");
   const timerRef = useRef();
 
-  const addMovieHandler = (movie) => {
-    console.log(movie);
+  const addMovieHandler = async (movie) => {
+    const response = await fetch(
+      "https://ecommerce-http-f19-default-rtdb.firebaseio.com/movies.json",
+      {
+        method: "POST",
+        body: JSON.stringify(movie),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+     await response.json();
+   fetchMovies();
   };
-  const fetchMovies = useCallback(async () => {
-    setIsLoading(true);
 
-    try {
-      const response = await fetch("https://swapi.info/api/films");
+  const deleteMovieHandler = async (id) =>{
+    const res  = await fetch(`https://ecommerce-http-f19-default-rtdb.firebaseio.com/movies/${id}.json`,{
+      method : "DELETE",
+    })
+   
+    setMovies((prevMovies)=>
+      prevMovies.filter((movie)=> movie.id !== id)
+    )
+  }
+  
+ const fetchMovies = useCallback(async () => {
+  setIsLoading(true);
 
-      if (!response.ok) {
-        throw new Error("Something went wrong... Retrying");
-      }
+  try {
+    const response = await fetch(
+      "https://ecommerce-http-f19-default-rtdb.firebaseio.com/movies.json"
+    );
 
-      const data = await response.json();
-
-      setMovies(data);
-      setError("");
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setIsLoading(false);
+    if (!response.ok) {
+      throw new Error("Something went wrong... Retrying");
     }
-  }, []);
+
+    const data = await response.json();
+
+    const loadedMovies = [];
+
+    for (const key in data) {
+      loadedMovies.push({
+        id: key,
+        title: data[key].title,
+        director: data[key].director,
+      });
+    }
+
+    setMovies(loadedMovies);
+    setError("");
+  } catch (error) {
+    setError(error.message);
+  } finally {
+    setIsLoading(false);
+  }
+}, []);
 
   useEffect(() => {
     fetchMovies();
@@ -52,7 +86,6 @@ function Home() {
   return (
     <>
       <Form onSubmit={addMovieHandler} />
-      
 
       <Container className="py-5">
         <h2 className="text-center mb-5">Movies</h2>
@@ -81,22 +114,31 @@ function Home() {
         )}
 
         {!isLoading &&
-        movies.map((movie) => (
-            <div
-              key={movie.episode_id}
-              className="border rounded p-4 mb-3 shadow-sm"
-            >
-              <h4>{movie.title}</h4>
+  movies.map((movie) => (
+    <div
+      key={movie.id}
+      className="border rounded p-3 mb-3 shadow-sm bg-light"
+    >
+      <h4 className="mb-2">{movie.title}</h4>
 
-              <p>
-                <strong>Director:</strong> {movie.director}
-              </p>
+      <p className="mb-3">
+        <strong>Director:</strong> {movie.director}
+      </p>
 
-              <Button variant="info" className="text-white fw-bold">
-                BUY TICKETS
-              </Button>
-            </div>
-          ))}
+      <div className="d-flex gap-2">
+        <Button variant="primary">
+          BUY TICKETS
+        </Button>
+
+        <Button
+          variant="danger"
+          onClick={() => deleteMovieHandler(movie.id)}
+        >
+          Delete
+        </Button>
+      </div>
+    </div>
+  ))}
       </Container>
     </>
   );
