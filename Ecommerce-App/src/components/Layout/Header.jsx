@@ -24,6 +24,10 @@ function Header({ onShow }) {
         Home
       </Nav.Link>
 
+ <Nav.Link as={NavLink} exact to="/products">
+       Products
+      </Nav.Link>
+
        <Nav.Link as={NavLink} exact to="/store">
         Store
       </Nav.Link>

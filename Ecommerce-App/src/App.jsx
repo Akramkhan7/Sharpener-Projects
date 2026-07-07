@@ -6,6 +6,8 @@ import Home from "./components/Pages/Home";
 import Store from "./components/Pages/Store";
 import About from "./components/Pages/About";
 import Contact from "./components/Pages/Contact.jsx";
+import Products from "./components/ProductSection/Products.jsx";
+import ProductDetails from "./components/ProductSection/ProductDetails.jsx";
 
 function App() {
   const [showCart, setShowCart] = useState(false);
@@ -28,6 +30,10 @@ function App() {
         <Route path="/store" component={Store} />
         <Route path="/about" component={About} />
         <Route path="/contact" component={Contact } />
+         <Route exact path="/products" component={Products} />
+
+  <Route path="/products/:productId" component={ProductDetails} />
+
       </Switch>
     </>
   );
