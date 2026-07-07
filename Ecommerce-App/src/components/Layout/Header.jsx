@@ -20,17 +20,22 @@ function Header({ onShow }) {
     </Navbar.Brand>
 
     <Nav className="mx-auto">
-      <Nav.Link as={NavLink} to="/" end>
+        <Nav.Link as={NavLink} exact to="/">
         Home
       </Nav.Link>
 
-      <Nav.Link as={NavLink} to="/store">
+       <Nav.Link as={NavLink} exact to="/store">
         Store
       </Nav.Link>
 
-      <Nav.Link as={NavLink} to="/about">
+        <Nav.Link as={NavLink} exact to="/about">
         About
       </Nav.Link>
+
+       <Nav.Link as={NavLink} exact to="/contact">
+        Contact Us
+      </Nav.Link>
+
     </Nav>
 
     {showCartButton && (
