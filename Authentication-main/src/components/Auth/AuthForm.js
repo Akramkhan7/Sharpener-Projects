@@ -11,6 +11,9 @@ const AuthForm = () => {
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
   };
+  
+  const API_KEY = process.env.REACT_APP_FIREBASE_API_KEY;
+  console.log(API_KEY);
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
@@ -25,7 +28,7 @@ const AuthForm = () => {
 
       try {
         const res = await fetch(
-          "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyALO-gH-DZNqX4e0R4jGqMcZpZHsuO7CdU",
+          `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`,
           {
             method: "POST",
             body: JSON.stringify({
