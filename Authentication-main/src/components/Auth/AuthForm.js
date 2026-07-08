@@ -1,4 +1,4 @@
-import { useState, useRef, useContext } from "react";
+import { useState, useRef, useContext, useEffect } from "react";
 
 import classes from "./AuthForm.module.css";
 import AuthContext from "../Store/AuthContext";
@@ -13,12 +13,15 @@ const AuthForm = () => {
 
   const authCtx = useContext(AuthContext);
 
+  useEffect(()=>{
+    localStorage.setItem('token',authCtx.token);
+  },[authCtx.token])
+
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
   };
 
   const API_KEY = process.env.REACT_APP_FIREBASE_API_KEY;
-  console.log(API_KEY);
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
@@ -42,6 +45,7 @@ const AuthForm = () => {
           })
           const data = await res.json();
           if(res.ok){
+            localStorage.setItem('token',data.idToken);
             authCtx.login(data.idToken);
             history.replace('/profile');
           }else{

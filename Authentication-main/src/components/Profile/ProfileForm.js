@@ -31,6 +31,7 @@ const ProfileForm = () => {
       console.log(data);
       if(res.ok){
         alert('Password changed successfully');
+        localStorage.setItem('token',data.idToken);
         authCtx.login(data.idToken);
       }else{
         alert(data.error.message);

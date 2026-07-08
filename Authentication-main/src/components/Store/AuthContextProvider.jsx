@@ -1,14 +1,17 @@
 import { useState } from "react";
-import AuthContext from "./AuthContext"
+import AuthContext from "./AuthContext";
 
 const AuthContextProvider = (props) => {
-  const [token, setToken] = useState("");
+  const storedToken = useState(localStorage.getItem("token"))
+  const [token, setToken] = useState(storedToken);
+
 
   const loginHandler = (token) => {
     setToken(token);
   };
   const logOutHandler = () => {
-setToken("");
+    localStorage.removeItem("token");
+    setToken(null);
   };
 
   const value = {
@@ -19,9 +22,7 @@ setToken("");
   };
 
   return (
-    <AuthContext.Provider value={value}>
-      {props.children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>
   );
 };
 
