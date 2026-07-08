@@ -11,7 +11,7 @@ const AuthForm = () => {
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
   };
-  
+
   const API_KEY = process.env.REACT_APP_FIREBASE_API_KEY;
   console.log(API_KEY);
 
@@ -22,7 +22,29 @@ const AuthForm = () => {
     const enteredPassword = passwordInputRef.current.value;
 
     if (isLogin) {
-
+      try {
+      const res = await fetch(
+          `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`,{
+            method: "POST",
+            body: JSON.stringify({
+              email: enteredEmail,
+              password: enteredPassword,
+              returnSecureToken: true,
+            }),
+            headers: {
+             'Content-Type': 'application/json',
+            }
+          })
+          const data = await res.json();
+          if(res.ok){
+            console.log(data.idToken);
+          }else{
+            alert(data.error.message);
+          }
+      } catch (err) {
+        alert(err.message);
+      }
+       
     } else {
       setIsLoading(true);
 
@@ -39,7 +61,7 @@ const AuthForm = () => {
             headers: {
               "Content-Type": "application/json",
             },
-          }
+          },
         );
 
         const data = await res.json();
