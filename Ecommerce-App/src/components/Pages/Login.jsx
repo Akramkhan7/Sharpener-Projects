@@ -27,6 +27,7 @@ function Login() {
 
 
      try {
+        setIsLoading(true);
       const res = await fetch(
           `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`,{
             method: "POST",
@@ -44,12 +45,16 @@ function Login() {
             localStorage.setItem('token',data.idToken);
             authCtx.login(data.idToken);
             history.replace('/products');
+            setIsLoading(false);
           }else{
             alert(data.error.message);
           }
       } catch (err) {
+        setIsLoading(false);
         alert(err.message);
-      }
+      }finally {
+  setIsLoading(false);
+}
 
   };
   return (

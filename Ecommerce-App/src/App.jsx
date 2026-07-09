@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch,Redirect } from "react-router-dom";
 import Cart from "./components/Cart/Cart.jsx";
 import Header from "./components/Layout/Header";
 import Home from "./components/Pages/Home";
@@ -13,7 +13,7 @@ import AuthContext from "./components/Store/AuthContext.jsx";
 
 function App() {
   const [showCart, setShowCart] = useState(false);
-  const authCtx = useContext(AuthContext)
+  const authCtx = useContext(AuthContext);
 
   const showCartHandler = () => {
     setShowCart(true);
@@ -34,9 +34,14 @@ function App() {
         <Route path="/store" component={Store} />
         <Route path="/about" component={About} />
         <Route path="/contact" component={Contact} />
-        <Route exact path="/products" component={Products} />
-        <Route path="/products/:productId" component={ProductDetails} />
 
+        <Route exact path="/products">
+          {authCtx.isLoggedIn ? <Products /> : <Redirect to="/auth" />}
+        </Route>
+
+        <Route path="/products/:productId">
+          {authCtx.isLoggedIn ? <ProductDetails /> : <Redirect to="/auth" />}
+        </Route>
       </Switch>
     </>
   );
