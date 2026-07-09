@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Route,Switch } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Route, Switch } from "react-router-dom";
 import Cart from "./components/Cart/Cart.jsx";
 import Header from "./components/Layout/Header";
 import Home from "./components/Pages/Home";
@@ -8,9 +8,12 @@ import About from "./components/Pages/About";
 import Contact from "./components/Pages/Contact.jsx";
 import Products from "./components/ProductSection/Products.jsx";
 import ProductDetails from "./components/ProductSection/ProductDetails.jsx";
+import Login from "./components/Pages/Login.jsx";
+import AuthContext from "./components/Store/AuthContext.jsx";
 
 function App() {
   const [showCart, setShowCart] = useState(false);
+  const authCtx = useContext(AuthContext)
 
   const showCartHandler = () => {
     setShowCart(true);
@@ -26,13 +29,13 @@ function App() {
       <Cart show={showCart} onHide={hideCartHandler} />
 
       <Switch>
-        <Route exact path="/" component={Home } />
+        <Route exact path="/" component={Home} />
+        <Route exact path="/auth" component={Login} />
         <Route path="/store" component={Store} />
         <Route path="/about" component={About} />
-        <Route path="/contact" component={Contact } />
-         <Route exact path="/products" component={Products} />
-
-  <Route path="/products/:productId" component={ProductDetails} />
+        <Route path="/contact" component={Contact} />
+        <Route exact path="/products" component={Products} />
+        <Route path="/products/:productId" component={ProductDetails} />
 
       </Switch>
     </>

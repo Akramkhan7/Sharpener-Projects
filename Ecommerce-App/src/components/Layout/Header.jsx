@@ -5,6 +5,7 @@ import Nav from "react-bootstrap/Nav";
 import { useContext } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import CartContext from "../Store/CartContext";
+import Login from "../Pages/Login";
 
 function Header({ onShow }) {
   const cartCtx = useContext(CartContext);
@@ -38,6 +39,10 @@ function Header({ onShow }) {
 
        <Nav.Link as={NavLink} exact to="/contact">
         Contact Us
+      </Nav.Link>
+
+      <Nav.Link as={NavLink} exact to="/auth">
+       Login
       </Nav.Link>
 
     </Nav>

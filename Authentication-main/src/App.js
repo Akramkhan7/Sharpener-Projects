@@ -12,7 +12,7 @@ function App() {
   const API_KEY = process.env.REACT_APP_FIREBASE_API_KEY;
 
 
-  
+  //auto logout
 useEffect(() => {
     if (!authCtx.token) return;
     const expireTime = localStorage.getItem("expireTime");
