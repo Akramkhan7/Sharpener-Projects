@@ -9,7 +9,8 @@ import Login from "../Pages/Login";
 
 function Header({ onShow }) {
   const cartCtx = useContext(CartContext);
-  const len = cartCtx?.items?.length ?? 0;
+  const len =
+    cartCtx?.items?.reduce((total, item) => total + (item.quantity || 1), 0) ?? 0;
   const location = useLocation();
   const showCartButton = location.pathname === "/store";
 
