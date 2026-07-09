@@ -1,15 +1,20 @@
-import { useContext, useState } from "react";
-import { Route, Switch,Redirect } from "react-router-dom";
-import Cart from "./components/Cart/Cart.jsx";
+import React, { Suspense, lazy, useContext, useState } from "react";
+import { Route, Switch, Redirect } from "react-router-dom";
+
+import Cart from "./components/Cart/Cart";
 import Header from "./components/Layout/Header";
-import Home from "./components/Pages/Home";
-import Store from "./components/Pages/Store";
-import About from "./components/Pages/About";
-import Contact from "./components/Pages/Contact.jsx";
-import Products from "./components/ProductSection/Products.jsx";
-import ProductDetails from "./components/ProductSection/ProductDetails.jsx";
-import Login from "./components/Pages/Login.jsx";
-import AuthContext from "./components/Store/AuthContext.jsx";
+import AuthContext from "./components/Store/AuthContext";
+
+const Home = lazy(() => import("./components/Pages/Home"));
+const Store = lazy(() => import("./components/Pages/Store"));
+const About = lazy(() => import("./components/Pages/About"));
+const Contact = lazy(() => import("./components/Pages/Contact"));
+const Products = lazy(() => import("./components/ProductSection/Products"));
+const ProductDetails = lazy(() =>
+  import("./components/ProductSection/ProductDetails")
+);
+const Login = lazy(() => import("./components/Pages/Login"));
+
 
 function App() {
   const [showCart, setShowCart] = useState(false);
@@ -27,7 +32,7 @@ function App() {
     <>
       <Header onShow={showCartHandler} />
       <Cart show={showCart} onHide={hideCartHandler} />
-
+<Suspense fallback={<h2>Loading...</h2>}>
       <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/auth" component={Login} />
@@ -43,6 +48,7 @@ function App() {
           {authCtx.isLoggedIn ? <ProductDetails /> : <Redirect to="/auth" />}
         </Route>
       </Switch>
+      </Suspense>
     </>
   );
 }
