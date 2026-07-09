@@ -28,6 +28,7 @@ const AuthForm = () => {
 
     const enteredEmail = emailInputRef.current.value;
     const enteredPassword = passwordInputRef.current.value;
+    const expireTime = new Date().getTime() + 5 * 60 * 1000  ; //
 
     if (isLogin) {
       try {
@@ -46,6 +47,7 @@ const AuthForm = () => {
           const data = await res.json();
           if(res.ok){
             localStorage.setItem('token',data.idToken);
+            localStorage.setItem('expireTime',expireTime);
             authCtx.login(data.idToken);
             history.replace('/profile');
           }else{

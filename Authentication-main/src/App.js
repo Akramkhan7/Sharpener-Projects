@@ -4,12 +4,25 @@ import Layout from "./components/Layout/Layout";
 import UserProfile from "./components/Profile/UserProfile";
 import AuthPage from "./pages/AuthPage";
 import HomePage from "./pages/HomePage";
-import { useContext, useEffect } from "react";
+import { use, useContext, useEffect } from "react";
 import AuthContext from "./components/Store/AuthContext";
 
 function App() {
   const authCtx = useContext(AuthContext);
   const API_KEY = process.env.REACT_APP_FIREBASE_API_KEY;
+
+
+  
+useEffect(() => {
+    if (!authCtx.token) return;
+    const expireTime = localStorage.getItem("expireTime");
+    const currentTime = new Date().getTime();
+    if (currentTime > expireTime) {
+      authCtx.logout();
+    }
+  }
+, [authCtx]);
+
   useEffect(() => {
     if (!authCtx.token) return;
     try {
@@ -34,6 +47,8 @@ function App() {
       authCtx.logout();
     }
   }, [authCtx]);
+
+
   return (
     <Layout>
       <Switch>
