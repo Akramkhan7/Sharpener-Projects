@@ -1,12 +1,15 @@
-import React from 'react'
-import Auth from './components/Auth/Auth'
+import React from "react";
+import { Switch, Route } from "react-router-dom";
+import Auth from "./components/Auth/Auth";
+import Home from "./components/Pages/Home";
 
 function App() {
   return (
-    <div>
-    <Auth />
-    </div>
-  )
+    <Switch>
+      <Route exact path="/" component={Auth} />
+      <Route path="/home" component={Home} />
+    </Switch>
+  );
 }
 
-export default App
+export default App;

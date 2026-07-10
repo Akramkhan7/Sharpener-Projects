@@ -8,7 +8,8 @@
 
 .auth-form {
     width: 350px;
-    padding: 30px;
+    padding: 25px 25px ;
+    padding-top: 40px;
     background: white;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
@@ -59,4 +60,50 @@ button:hover {
     align-items: center;
     margin-top: 15px;
     cursor: pointer;
+}
+
+.password-box {
+    position: relative;
+}
+
+.password-box input {
+    width: 100%;
+    padding-right: 45px;
+    /* Space for the icon */
+}
+
+.eye-icon {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #555;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle-box {
+    width: 350px;
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #cfcfcf;
+    text-align: center;
+    font-size: 13px;
+}
+
+.toggle-box span {
+    cursor: pointer;
+    font-weight: 500;
+    color: blue;
+}
+
+.forgot-password {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    font-size: 13px;
 }
