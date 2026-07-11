@@ -1,15 +1,17 @@
 import React, { useContext, useState } from "react";
 import ExpenseContext from "../Store/ExpenseContext";
+import { CgSpinner } from "react-icons/cg";
 
 function ExpenseForm(props) {
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const expenseCtx = useContext(ExpenseContext);
+  const API_KEY = import.meta.env.VITE_FIREBASE_DB_URL;
 
-
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
 
     const expenseData = {
@@ -19,7 +21,30 @@ function ExpenseForm(props) {
       category,
     };
 
-    expenseCtx.addExpense(expenseData);
+    try {
+      setIsLoading(true);
+      const res = await fetch(`${API_KEY}/expense.json`, {
+        method: "POST",
+        body: JSON.stringify(expenseData),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to add expense");
+      }
+
+      const data = await res.json();
+      expenseCtx.addExpense({
+        id: data.name,
+        ...expenseData,
+      });
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
 
     setAmount("");
     setDescription("");
@@ -90,9 +115,17 @@ function ExpenseForm(props) {
         {/* Button */}
         <button
           type="submit"
-          className="w-full rounded-md bg-blue-600 py-3 text-white font-semibold hover:bg-blue-700"
+          className="w-full rounded-md bg-blue-600 py-3 text-white font-semibold hover:bg-blue-700 flex justify-center items-center gap-2"
+          disabled={isLoading}
         >
-          Add Expense
+          {isLoading ? (
+            <>
+              <CgSpinner className="animate-spin text-xl" />
+              <span>Adding...</span>
+            </>
+          ) : (
+            "Add Expense"
+          )}
         </button>
       </form>
     </div>

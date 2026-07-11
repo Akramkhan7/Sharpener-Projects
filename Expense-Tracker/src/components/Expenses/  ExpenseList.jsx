@@ -4,7 +4,6 @@ import ExpenseItem from "./ ExpenseItem";
 
 function ExpenseList() {
   const expenseCtx = useContext(ExpenseContext);
-  console.log(expenseCtx.expenses);
 
   return (
     <div className="max-w-3xl mx-auto mt-8">
