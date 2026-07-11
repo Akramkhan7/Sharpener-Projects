@@ -1,26 +1,68 @@
 import { updateProfile } from "firebase/auth";
-import React, { useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { auth } from "../Firebase/firebase";
+import AuthContext from "../Store/AuthContext";
 
 function Profile() {
   const fullNameRef = useRef();
   const photoRef = useRef();
 
+  const API_KEY = import.meta.env.VITE_FIREBASE_API_KEY;
+  const authCtx = useContext(AuthContext);
   const onSubmitHandler = async (e) => {
     e.preventDefault();
+
     const enteredName = fullNameRef.current.value;
     const enteredUrl = photoRef.current.value;
 
     try {
       await updateProfile(auth.currentUser, {
-        enteredName,
-        enteredUrl,
+        displayName: enteredName,
+        photoURL: enteredUrl,
       });
-      console.log("Data updated");
+
+      console.log("Profile Updated Successfully");
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
     }
   };
+
+  const fetchUserDetails = async () => {
+    try {
+      const res = await fetch(
+        `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${API_KEY}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            idToken: authCtx.idToken,
+          }),
+        },
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error.message);
+      }
+
+      const user = data.users[0];
+
+      fullNameRef.current.value = user.displayName || "";
+      photoRef.current.value = user.photoUrl || "";
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
+  useEffect(() => {
+    if (authCtx.idToken) {
+      fetchUserDetails();
+    }
+  }, [authCtx.idToken]);
+
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-start py-12">
       <div className="w-full max-w-3xl bg-white shadow-md rounded-lg p-8">

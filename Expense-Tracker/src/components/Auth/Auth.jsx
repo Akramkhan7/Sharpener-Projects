@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -7,6 +7,7 @@ import { auth } from "../Firebase/firebase";
 import "./Auth.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import AuthContext from "../Store/AuthContext";
 
 function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -15,7 +16,7 @@ function Auth() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
+  const authCtx = useContext(AuthContext);
 
   const history = useHistory();
 
@@ -33,23 +34,28 @@ function Auth() {
     }
 
     try {
-        let userCredential;
+      let userCredential;
       if (isLogin) {
-        userCredential = await signInWithEmailAndPassword(auth, email, password);
+        userCredential = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password,
+        );
         console.log("User Logged In");
       } else {
-        userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password,
+        );
         console.log("User has successfully signed up.");
       }
 
-      console.log(userCredential);
       const token = await userCredential.user.getIdToken();
 
-    // Store token
-    localStorage.setItem("token", token);
+      localStorage.setItem("token", token);
 
-    console.log("Token:", token);
-      history.replace('/home')
+      history.replace("/home");
       setEmail("");
       setPassword("");
       setConfirmPassword("");
