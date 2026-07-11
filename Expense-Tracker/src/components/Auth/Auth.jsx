@@ -40,7 +40,6 @@ function Auth() {
           email,
           password,
         );
-        console.log("User Logged In");
       } else {
         userCredential = await createUserWithEmailAndPassword(
           auth,
