@@ -1,12 +1,19 @@
 import { sendEmailVerification } from "firebase/auth";
 import React, { useContext } from "react";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import { Link, useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { auth } from "../Firebase/firebase";
 import AuthContext from "../Store/AuthContext";
 
 function Home() {
   const api_key = import.meta.env.VITE_FIREBASE_API_KEY;
   const authCtx = useContext(AuthContext);
+  const history = useHistory();
+
+
+  const logoutHandler = () =>{
+    authCtx.LogOut();
+    history.replace('/auth');
+  }
   const verifyEmailHandler = async () => {
     try {
       const response = await fetch(
@@ -55,6 +62,13 @@ function Home() {
             >
               Verify Email
             </button>
+
+            <button
+  onClick={logoutHandler}
+  className="rounded-lg bg-red-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-red-700"
+>
+  Logout
+</button>
           </div>
         </div>
       </header>
