@@ -1,10 +1,13 @@
-import React from 'react'
+import React from "react";
 
 const ExpenseContext = React.createContext({
-    expenses : [],
-    addExpense : () => {},
-    removeExpense : () => {},
-    editExpense : () => {}.
-})
+  expenses: [],
+  addExpense: () => {},
+  removeExpense: () => {},
+  editExpense: () => {},
+  updateExpense: () => {},
+  editingExpense: null,
+  cancelEdit: () => {},
+});
 
-export default ExpenseContext
+export default ExpenseContext;

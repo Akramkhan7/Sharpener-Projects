@@ -3,9 +3,16 @@ import ExpenseContext from "./ExpenseContext";
 
 function ExpenseProvider(props) {
   const [expenses, setExpenses] = useState([]);
+  const [editingExpense, setEditingExpense] = useState(null);
   const api_key = import.meta.env.VITE_FIREBASE_DB_URL;
 
-  const StoreExpenseHandler = () => {};
+  const editExpenseHandler = (expense) => {
+    setEditingExpense(expense);
+  };
+
+  const cancelEditHandler = () => {
+    setEditingExpense(null);
+  };
 
   const addExpenseHandler = (expense) => {
     console.log(expense);
@@ -34,13 +41,15 @@ function ExpenseProvider(props) {
     }
   };
 
-  const editExpenseHandler = async (id) =>{
-    try{
-        const res = await fetch(`${api_key}/`)
-    }catch(err){
-        console.log(err);
-    }
-  }
+const updateExpenseHandler = (updatedExpense) => {
+  setExpenses((prevExpenses) =>
+    prevExpenses.map((expense) =>
+      expense.id === updatedExpense.id
+        ? updatedExpense
+        : expense
+    )
+  );
+};
 
   useEffect(() => {
     const fetchExpenses = async () => {
@@ -71,12 +80,15 @@ function ExpenseProvider(props) {
     fetchExpenses();
   }, []);
 
-  const value = {
-    expenses,
-    addExpense: addExpenseHandler,
-    removeExpense: removeExpenseHandler,
-    editExpense : editExpenseHandler,
-  };
+ const value = {
+  expenses,
+  addExpense: addExpenseHandler,
+  removeExpense: removeExpenseHandler,
+  editExpense: editExpenseHandler,
+  updateExpense: updateExpenseHandler,
+  editingExpense,
+  cancelEdit: cancelEditHandler,
+};
   return (
     <ExpenseContext.Provider value={value}>
       {props.children}

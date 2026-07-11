@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ExpenseContext from "../Store/ExpenseContext";
 import { CgSpinner } from "react-icons/cg";
 
@@ -11,6 +11,14 @@ function ExpenseForm(props) {
   const expenseCtx = useContext(ExpenseContext);
   const API_KEY = import.meta.env.VITE_FIREBASE_DB_URL;
 
+  useEffect(() => {
+    if (expenseCtx.editingExpense) {
+      setAmount(expenseCtx.editingExpense.amount);
+      setDescription(expenseCtx.editingExpense.description);
+      setCategory(expenseCtx.editingExpense.category);
+    }
+  }, [expenseCtx.editingExpense]);
+
   const submitHandler = async (e) => {
     e.preventDefault();
 
@@ -21,34 +29,70 @@ function ExpenseForm(props) {
       category,
     };
 
-    try {
-      setIsLoading(true);
-      const res = await fetch(`${API_KEY}/expense.json`, {
-        method: "POST",
-        body: JSON.stringify(expenseData),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+    if (!expenseCtx.editingExpense) {
+      try {
+        setIsLoading(true);
+        const res = await fetch(`${API_KEY}/expense.json`, {
+          method: "POST",
+          body: JSON.stringify(expenseData),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
-      if (!res.ok) {
-        throw new Error("Failed to add expense");
+        if (!res.ok) {
+          throw new Error("Failed to add expense");
+        }
+
+        const data = await res.json();
+        expenseCtx.addExpense({
+          id: data.name,
+          ...expenseData,
+        });
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setIsLoading(false);
       }
+    } else {
+      try {
+        setIsLoading(true);
+        const res = await fetch(
+          `${API_KEY}/expense/${expenseCtx.editingExpense.id}.json`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              amount,
+              description,
+              category,
+            }),
+          },
+        );
 
-      const data = await res.json();
-      expenseCtx.addExpense({
-        id: data.name,
-        ...expenseData,
-      });
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setIsLoading(false);
+        if (!res.ok) {
+          throw new Error("Failed to update expense");
+        }
+
+        // update local state
+        expenseCtx.updateExpense({
+          id: expenseCtx.editingExpense.id,
+          amount,
+          description,
+          category,
+        });
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setIsLoading(false);
+        expenseCtx.cancelEdit();
+        setAmount("");
+        setDescription("");
+        setCategory("");
+      }
     }
-
-    setAmount("");
-    setDescription("");
-    setCategory("");
   };
 
   return (
@@ -121,8 +165,12 @@ function ExpenseForm(props) {
           {isLoading ? (
             <>
               <CgSpinner className="animate-spin text-xl" />
-              <span>Adding...</span>
+              <span>
+                {expenseCtx.editingExpense ? "Updating..." : "Adding..."}
+              </span>
             </>
+          ) : expenseCtx.editingExpense ? (
+            "Update Expense"
           ) : (
             "Add Expense"
           )}
