@@ -1,5 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
-import ExpenseContext from "../Store/ExpenseContext";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { expenseActions } from "../Store/Expense-slice";
 import { CgSpinner } from "react-icons/cg";
 
 function ExpenseForm(props) {
@@ -8,28 +9,29 @@ function ExpenseForm(props) {
   const [category, setCategory] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const expenseCtx = useContext(ExpenseContext);
   const API_KEY = import.meta.env.VITE_FIREBASE_DB_URL;
+  const dispatch = useDispatch();
+
+  const editingExpense = useSelector((state) => state.expenses.editingExpense);
 
   useEffect(() => {
-    if (expenseCtx.editingExpense) {
-      setAmount(expenseCtx.editingExpense.amount);
-      setDescription(expenseCtx.editingExpense.description);
-      setCategory(expenseCtx.editingExpense.category);
+    if (editingExpense) {
+      setAmount(editingExpense.amount);
+    setDescription(editingExpense.description);
+    setCategory(editingExpense.category);
     }
-  }, [expenseCtx.editingExpense]);
+  }, [editingExpense]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
 
     const expenseData = {
-      id: Date.now().toString(),
       amount,
       description,
       category,
     };
 
-    if (!expenseCtx.editingExpense) {
+    if (!editingExpense) {
       try {
         setIsLoading(true);
         const res = await fetch(`${API_KEY}/expense.json`, {
@@ -45,20 +47,22 @@ function ExpenseForm(props) {
         }
 
         const data = await res.json();
-        expenseCtx.addExpense({
-          id: data.name,
-          ...expenseData,
-        });
+        dispatch(
+          expenseActions.addExpense({
+            id: data.name,
+            ...expenseData,
+          }),
+        );
       } catch (err) {
         console.log(err);
       } finally {
         setIsLoading(false);
       }
-    } else {
+    } else { // for updating exist expenses
       try {
         setIsLoading(true);
         const res = await fetch(
-          `${API_KEY}/expense/${expenseCtx.editingExpense.id}.json`,
+          `${API_KEY}/expense/${editingExpense.id}.json`,
           {
             method: "PUT",
             headers: {
@@ -77,17 +81,20 @@ function ExpenseForm(props) {
         }
 
         // update local state
-        expenseCtx.updateExpense({
-          id: expenseCtx.editingExpense.id,
-          amount,
-          description,
-          category,
-        });
+
+        dispatch(
+          expenseActions.editExpense({
+            id: editingExpense.id,
+            amount,
+            description,
+            category,
+          }),
+        );
       } catch (err) {
         console.log(err);
       } finally {
         setIsLoading(false);
-        expenseCtx.cancelEdit();
+        dispatch(expenseActions.cancelEdit());
         setAmount("");
         setDescription("");
         setCategory("");
@@ -166,10 +173,10 @@ function ExpenseForm(props) {
             <>
               <CgSpinner className="animate-spin text-xl" />
               <span>
-                {expenseCtx.editingExpense ? "Updating..." : "Adding..."}
+                {editingExpense ? "Updating..." : "Adding..."}
               </span>
             </>
-          ) : expenseCtx.editingExpense ? (
+          ) : editingExpense ? (
             "Update Expense"
           ) : (
             "Add Expense"

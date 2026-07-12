@@ -5,8 +5,9 @@ import {
 } from "firebase/auth";
 import { auth } from "../Firebase/firebase";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import {Link, useHistory } from "react-router-dom";
-import AuthContext from "../Store/AuthContext";
+import { Link, useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { authActions } from "../Store/Auth-slice";
 
 function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -15,7 +16,8 @@ function Auth() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const authCtx = useContext(AuthContext);
+
+  const dispatch = useDispatch();
 
   const history = useHistory();
 
@@ -34,6 +36,7 @@ function Auth() {
 
     try {
       let userCredential;
+
       if (isLogin) {
         userCredential = await signInWithEmailAndPassword(
           auth,
@@ -47,11 +50,24 @@ function Auth() {
           password,
         );
       }
+
       const token = await userCredential.user.getIdToken();
 
+      // Save in localStorage
       localStorage.setItem("token", token);
+      localStorage.setItem("userId", userCredential.user.uid);
+
+      // Save in Redux
+      dispatch(
+        authActions.login({
+          token: token,
+          userId: userCredential.user.uid,
+        }),
+      );
 
       history.replace("/home");
+
+      // Clear form
       setEmail("");
       setPassword("");
       setConfirmPassword("");
@@ -64,67 +80,65 @@ function Auth() {
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="w-full max-w-md">
         <div>
-        <form
-          onSubmit={submitHandler}
-          className="bg-white shadow-lg rounded-lg p-8 space-y-5"
-        >
-          <h2 className="text-3xl font-bold text-center text-gray-800">
-            {isLogin ? "Login" : "Sign Up"}
-          </h2>
+          <form
+            onSubmit={submitHandler}
+            className="bg-white shadow-lg rounded-lg p-8 space-y-5"
+          >
+            <h2 className="text-3xl font-bold text-center text-gray-800">
+              {isLogin ? "Login" : "Sign Up"}
+            </h2>
 
-          <div>
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div className="relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full border border-gray-300 rounded-md px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-
-            <span
-              onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500"
-            >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
-            </span>
-          </div>
-
-          {!isLogin && (
             <div>
               <input
-                type="password"
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
                 className="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-          )}
 
-          <button
-            type="submit"
-            disabled={!email || !password || (!isLogin && !confirmPassword)}
-            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3 rounded-md transition"
-          >
-            {isLogin ? "Login" : "Sign Up"}
-          </button>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full border border-gray-300 rounded-md px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
 
-          
-        </form>
-        {isLogin && (
+              <span
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500"
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
+            </div>
+
+            {!isLogin && (
+              <div>
+                <input
+                  type="password"
+                  placeholder="Confirm Password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                  className="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={!email || !password || (!isLogin && !confirmPassword)}
+              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3 rounded-md transition"
+            >
+              {isLogin ? "Login" : "Sign Up"}
+            </button>
+          </form>
+          {isLogin && (
             <p className="text-center">
               <Link
                 to="/forgot-password"
@@ -134,7 +148,7 @@ function Auth() {
               </Link>
             </p>
           )}
-          </div>
+        </div>
 
         <div className="mt-6 bg-white shadow rounded-lg p-4 text-center">
           {isLogin ? (
