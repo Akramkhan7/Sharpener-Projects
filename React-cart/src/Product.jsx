@@ -1,18 +1,18 @@
 import { useDispatch, useSelector } from "react-redux";
 import { cartActions } from "./store";
-function Product({ title, price, description }) {
+function Product({ id,title, price, description }) {
    
   const dispatch = useDispatch();
   const items = useSelector((state) => state.cart.items);
 
   const addToCartHandler = () => {
-     const exist = items.find((item) => item.title === title);
+     const exist = items.find((item) => item.id === id);
     if (exist) {
-        dispatch(cartActions.increaseQnty(title)); 
+        dispatch(cartActions.increaseQnty(id)); 
     } else {
       dispatch(
         cartActions.addItem({
-          id: 1,
+          id,
           title,
           price: parseFloat(price.replace("$", "")),
           description,

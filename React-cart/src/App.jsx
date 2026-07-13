@@ -2,9 +2,10 @@ import Header from "./Header";
 import Cart from "./Cart";
 import Product from "./Product";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import Notification from "./Notification";
 import { uiActions } from "./ui-slice";
+import { cartActions } from "./store";
 
 function App() {
   const cart = useSelector((state) => state.cart);
@@ -58,6 +59,24 @@ function App() {
     sendData();
   }, [cart, dispatch]);
 
+
+  const fetchData = async () =>{
+    try{
+      const res = await fetch(`https://expense-tracker-a04e2-default-rtdb.firebaseio.com/cart.json`,{
+        method : 'GET',
+      })
+
+      const data = await res.json();
+      console.log(data);
+
+      dispatch(cartActions.replaceCart(data));
+    }catch(err){
+      console.log(err);
+    }
+  }
+  useEffect(()=>{
+    fetchData();
+  },[])
   return (
     <div className="min-h-screen bg-zinc-800">
       <Notification />
@@ -72,12 +91,14 @@ function App() {
 
         <div className="space-y-8">
           <Product
+            id={1}
             title="Test"
             price="$6.00"
             description="This is a first product - amazing!"
           />
 
           <Product
+           id={2}
             title="Second Product"
             price="$12.00"
             description="This is another awesome product."
