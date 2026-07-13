@@ -1,5 +1,5 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
-
+import uiReducer from "./ui-slice";
 const initialState = {
   items: [],
   cartItems: 0,
@@ -54,9 +54,12 @@ const cartSlice = createSlice({
   },
 });
 
+
+
 const store = configureStore({
   reducer: {
     cart: cartSlice.reducer,
+    ui: uiReducer,
   },
 });
 
