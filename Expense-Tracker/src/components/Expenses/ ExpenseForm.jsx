@@ -17,8 +17,8 @@ function ExpenseForm(props) {
   useEffect(() => {
     if (editingExpense) {
       setAmount(editingExpense.amount);
-    setDescription(editingExpense.description);
-    setCategory(editingExpense.category);
+      setDescription(editingExpense.description);
+      setCategory(editingExpense.category);
     }
   }, [editingExpense]);
 
@@ -58,7 +58,8 @@ function ExpenseForm(props) {
       } finally {
         setIsLoading(false);
       }
-    } else { // for updating exist expenses
+    } else {
+      // for updating exist expenses
       try {
         setIsLoading(true);
         const res = await fetch(
@@ -172,9 +173,7 @@ function ExpenseForm(props) {
           {isLoading ? (
             <>
               <CgSpinner className="animate-spin text-xl" />
-              <span>
-                {editingExpense ? "Updating..." : "Adding..."}
-              </span>
+              <span>{editingExpense ? "Updating..." : "Adding..."}</span>
             </>
           ) : editingExpense ? (
             "Update Expense"

@@ -2,7 +2,62 @@
 
 
 
-body{
-font-weight: 100;
-font-family:sans-serif
+body {
+    font-weight: 100;
+    font-family: sans-serif
+}
+
+body {
+    margin: 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.light-theme {
+    background-color: #f3f4f6;
+    color: #111827;
+}
+
+.dark-theme {
+    background-color: #0f172a;
+    color: #f8fafc;
+}
+
+.dark-theme header {
+    background-color: #1e293b !important;
+    color: white;
+    border-color: #334155;
+}
+
+.dark-theme input,
+.dark-theme select,
+.dark-theme textarea {
+    background-color: #334155;
+    color: white;
+    border: 1px solid #475569;
+}
+
+.dark-theme input::placeholder {
+    color: #cbd5e1;
+}
+
+.dark-theme button {
+    transition: 0.3s;
+}
+
+.dark-theme .bg-white {
+    background-color: #1e293b !important;
+}
+
+.dark-theme .text-gray-800,
+.dark-theme .text-gray-700,
+.dark-theme .text-gray-600 {
+    color: #f8fafc !important;
+}
+
+.dark-theme .border-gray-200,
+.dark-theme .border-gray-300 {
+    border-color: #475569 !important;
+}
+.dark-theme #header-h1{
+    color: white;
 }

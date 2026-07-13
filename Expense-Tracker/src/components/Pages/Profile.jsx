@@ -1,14 +1,16 @@
 import { updateProfile } from "firebase/auth";
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { auth } from "../Firebase/firebase";
-import AuthContext from "../Store/AuthContext";
+import { useSelector } from "react-redux";
 
 function Profile() {
   const fullNameRef = useRef();
   const photoRef = useRef();
 
   const API_KEY = import.meta.env.VITE_FIREBASE_API_KEY;
-  const authCtx = useContext(AuthContext);
+
+  const token = useSelector((state) => state.auth.token);
+
   const onSubmitHandler = async (e) => {
     e.preventDefault();
 
@@ -28,6 +30,7 @@ function Profile() {
   };
 
   const fetchUserDetails = async () => {
+  
     try {
       const res = await fetch(
         `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${API_KEY}`,
@@ -37,12 +40,14 @@ function Profile() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            idToken: authCtx.idToken,
+            idToken: token,
           }),
-        },
+        }
       );
+     
 
       const data = await res.json();
+       console.log(data);
 
       if (!res.ok) {
         throw new Error(data.error.message);
@@ -58,10 +63,10 @@ function Profile() {
   };
 
   useEffect(() => {
-    if (authCtx.idToken) {
+    if (token) {
       fetchUserDetails();
     }
-  }, [authCtx.idToken]);
+  }, [token]);
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-start py-12">
