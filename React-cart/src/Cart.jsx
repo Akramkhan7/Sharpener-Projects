@@ -14,9 +14,14 @@ function Cart() {
   const handlerIncrease = (title) =>{
    dispatch(cartActions.increaseQnty(title));
   }
-  const handlerDecrease = (title) =>{
-    dispatch(cartActions.decreaseQnty(title));
-  }
+  const handlerDecrease = (id) =>{
+    const item = items.find((item) => item.id == id);
+    if(item.quantity === 1){
+    dispatch(cartActions.removeItem(id));
+      }else{
+         dispatch(cartActions.decreaseQnty(id));
+      }
+    }
 
   return (
    <div className="max-w-xl mx-auto bg-zinc-900 rounded-lg p-6 shadow-lg">
@@ -43,7 +48,7 @@ function Cart() {
 
         <div className="text-right">
           <p className="text-3xl font-bold text-white">
-          ${Number(item.price) * item.quantity || '0'}
+          ${item.price * item.quantity}
           </p>
 
 
@@ -52,7 +57,7 @@ function Cart() {
           </p>
 
           <div className="flex gap-2 justify-end mt-4">
-            <button className="border border-white px-4 py-1 rounded text-white" onClick={()=>handlerDecrease(item.title)}>
+            <button className="border border-white px-4 py-1 rounded text-white" onClick={()=>handlerDecrease(item.id)}>
               -
             </button>
 

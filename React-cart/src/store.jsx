@@ -6,6 +6,7 @@ const initialState = {
   showCart: false,
 };
 
+
 const cartSlice = createSlice({
   name: "cart",
   initialState,
@@ -13,6 +14,17 @@ const cartSlice = createSlice({
     addItem(state, action) {
       state.items.push(action.payload);
       state.cartItems++;
+    },
+    removeItem(state,action){
+    const item = state.items.find((item)=> item.id === action.payload);
+
+    state.cartItems--;
+    if(item.quantity === 1){
+     state.items =  state.items.filter((item)=> item.id !== action.payload);
+    }else{
+      state.cartItems--;
+      item.quantity--;
+    }
     },
 
     decrement(state) {
@@ -25,13 +37,15 @@ const cartSlice = createSlice({
 
     increaseQnty(state, action) {
       const item = state.items.find((item) => item.title == action.payload);
+      
       if (item) {
         item.quantity++;
         state.cartItems++;
       }
     },
      decreaseQnty(state, action) {
-      const item = state.items.find((item) => item.title == action.payload);
+      const item = state.items.find((item) => item.id == action.payload);
+      
       if (item) {
         item.quantity--;
         state.cartItems--;

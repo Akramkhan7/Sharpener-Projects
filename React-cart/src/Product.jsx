@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { cartActions } from "./store";
 function Product({ title, price, description }) {
+   
   const dispatch = useDispatch();
   const items = useSelector((state) => state.cart.items);
 
@@ -13,7 +14,7 @@ function Product({ title, price, description }) {
         cartActions.addItem({
           id: 1,
           title,
-          price,
+          price: parseFloat(price.replace("$", "")),
           description,
           quantity: 1,
         }),
