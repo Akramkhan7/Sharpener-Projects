@@ -1,10 +1,37 @@
-import { configureStore, createSlice } from "@reduxjs/toolkit";
+import {
+  configureStore,
+  createAsyncThunk,
+  createSlice,
+} from "@reduxjs/toolkit";
 import uiReducer from "./ui-slice";
 const initialState = {
   items: [],
   cartItems: 0,
   showCart: false,
 };
+
+export const sendCartData = createAsyncThunk(
+  "cart/sendCartData",
+  async (cart, { rejectValueWith }) => {
+    try {
+      const res = await fetch(
+        "https://expense-tracker-a04e2-default-rtdb.firebaseio.com/cart.json",
+        {
+          method: "PUT",
+          body: JSON.stringify(cart),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Sending cart data failed!");
+      }
+
+      return "Cart data sent successfully!";
+    } catch (err) {
+      return rejectValueWith(err.message);
+    }
+  },
+);
 
 const cartSlice = createSlice({
   name: "cart",
@@ -54,6 +81,34 @@ const cartSlice = createSlice({
         item.quantity--;
         state.cartItems--;
       }
+    },
+
+    extraReducers: (builder) => {
+      builder.addCase(sendCartData.pending, (state) => {
+        state.notification = {
+          status: "pending",
+          title: "Sending...",
+          message: "Sending cart data!",
+        };
+      })
+
+      .addCase(sendCartData.fulfilled, (state) => {
+        state.notification = {
+          status: "success",
+          title: "Success!",
+          message: "Cart data sent successfully!",
+        };
+      })
+
+      .addCase(sendCartData.rejected, (state, action) => {
+        state.notification = {
+          status: "error",
+          title: "Error!",
+          message: action.payload || "Sending cart data failed!",
+        };
+      })
+
+
     },
   },
 });
