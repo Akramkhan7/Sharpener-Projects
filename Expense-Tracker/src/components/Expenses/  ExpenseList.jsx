@@ -13,7 +13,7 @@ function ExpenseList() {
   );
 
   return (
-    <div className="max-w-3xl mx-auto mt-8">
+    <div className="max-w-3xl mx-auto mt-8 ">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800">
           Expense Tracker
@@ -36,7 +36,7 @@ function ExpenseList() {
           No expenses added yet.
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-4 pb-5">
           {expenses.map((expense) => (
             <ExpenseItem key={expense.id} expense={expense} />
           ))}

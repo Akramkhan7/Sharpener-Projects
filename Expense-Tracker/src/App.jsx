@@ -6,9 +6,8 @@ import Profile from "./components/Pages/Profile";
 import { useSelector } from "react-redux";
 import ForgotPassword from "./components/Pages/ForgotPassword";
 
-
 function App() {
-const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   return (
     <Switch>
       <Route path="/auth" exact component={Auth} />

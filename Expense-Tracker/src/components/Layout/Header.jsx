@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../Store/Auth-slice";
 import { themeActions } from "../Store/Theme-slice";
 import { expenseActions } from "../Store/Expense-slice";
+import { signOut } from "firebase/auth";
+import { auth } from "../Firebase/firebase";
 
 function Header() {
   const api_key = import.meta.env.VITE_FIREBASE_API_KEY;
@@ -20,7 +22,7 @@ function Header() {
   const downloadCsv = () => {
     const headers = ["Amount,Description,Category"];
     const rows = expenses.map((expense) => {
-     return `${expense.amount},${expense.description},${expense.category}`;
+      return `${expense.amount},${expense.description},${expense.category}`;
     });
 
     const csv = [...headers, ...rows].join("\n");
@@ -34,9 +36,16 @@ function Header() {
     window.URL.revokeObjectURL(url);
   };
 
-  const logoutHandler = () => {
-    dispatch(authActions.logout());
-    history.replace("/auth");
+  const logoutHandler = async () => {
+    try {
+      await signOut(auth);
+
+      dispatch(authActions.logout());
+
+      history.replace("/auth");
+    } catch (err) {
+      console.log(err.message);
+    }
   };
 
   const verifyEmailHandler = async () => {
@@ -92,7 +101,7 @@ function Header() {
             </button>
           )}
 
-         <Link to="/profile">
+          <Link to="/profile">
             <button className="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-700">
               Complete Profile
             </button>

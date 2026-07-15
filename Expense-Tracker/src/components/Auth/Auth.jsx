@@ -51,13 +51,13 @@ function Auth() {
         );
       }
 
+
+
       const token = await userCredential.user.getIdToken();
 
-      // Save in localStorage
       localStorage.setItem("token", token);
       localStorage.setItem("userId", userCredential.user.uid);
 
-      // Save in Redux
       dispatch(
         authActions.login({
           token: token,
@@ -67,12 +67,11 @@ function Auth() {
 
       history.replace("/home");
 
-      // Clear form
       setEmail("");
       setPassword("");
       setConfirmPassword("");
     } catch (err) {
-      alert(err.message);
+      console.log(err.message);
     }
   };
 
@@ -82,7 +81,7 @@ function Auth() {
         <div>
           <form
             onSubmit={submitHandler}
-            className="bg-white shadow-lg rounded-lg p-8 space-y-5"
+            className="bg-white shadow-lg rounded-lg p-5 space-y-5"
           >
             <h2 className="text-3xl font-bold text-center text-gray-800">
               {isLogin ? "Login" : "Sign Up"}
@@ -137,8 +136,9 @@ function Auth() {
             >
               {isLogin ? "Login" : "Sign Up"}
             </button>
-          </form>
-          {isLogin && (
+
+
+             {isLogin && (
             <p className="text-center">
               <Link
                 to="/forgot-password"
@@ -148,6 +148,8 @@ function Auth() {
               </Link>
             </p>
           )}
+          </form>
+         
         </div>
 
         <div className="mt-6 bg-white shadow rounded-lg p-4 text-center">

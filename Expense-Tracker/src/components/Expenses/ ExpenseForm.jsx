@@ -13,6 +13,7 @@ function ExpenseForm(props) {
   const dispatch = useDispatch();
 
   const editingExpense = useSelector((state) => state.expenses.editingExpense);
+  const userId = useSelector((state) => state.auth.userId);
 
   useEffect(() => {
     if (editingExpense) {
@@ -34,7 +35,7 @@ function ExpenseForm(props) {
     if (!editingExpense) {
       try {
         setIsLoading(true);
-        const res = await fetch(`${API_KEY}/expense.json`, {
+        const res = await fetch(`${API_KEY}/expense/${userId}.json`, {
           method: "POST",
           body: JSON.stringify(expenseData),
           headers: {
@@ -53,6 +54,10 @@ function ExpenseForm(props) {
             ...expenseData,
           }),
         );
+
+        setAmount("");
+        setCategory("");
+        setDescription("");
       } catch (err) {
         console.log(err);
       } finally {
@@ -63,7 +68,7 @@ function ExpenseForm(props) {
       try {
         setIsLoading(true);
         const res = await fetch(
-          `${API_KEY}/expense/${editingExpense.id}.json`,
+          `${API_KEY}/expense/${userId}/${editingExpense.id}.json`,
           {
             method: "PUT",
             headers: {

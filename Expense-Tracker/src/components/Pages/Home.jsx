@@ -9,16 +9,21 @@ function Home() {
   const api_key = import.meta.env.VITE_FIREBASE_DB_URL;
   const dispatch = useDispatch();
   const darkMode = useSelector((state) => state.theme.darkMode);
+  const userId = useSelector((state) => state.auth.userId);
 
   useEffect(() => {
     const fetchExpenses = async () => {
-      const res = await fetch(`${api_key}/expense.json`);
+      const res = await fetch(`${api_key}/expense/${userId}.json`);
 
       if (!res.ok) {
         return;
       }
 
       const data = await res.json();
+      if (!data) {
+        dispatch(expenseActions.setExpenses([]));
+        return;
+      }
 
       let loadedExpenses = [];
 
@@ -36,7 +41,9 @@ function Home() {
   }, [dispatch]);
   return (
     <div
-     className={darkMode ? 'dark-theme min-h-screen' : 'light-theme min-h-screen'}
+      className={
+        darkMode ? "dark-theme min-h-screen" : "light-theme min-h-screen"
+      }
     >
       <Header />
       <ExpenseForm />

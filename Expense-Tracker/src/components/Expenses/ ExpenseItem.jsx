@@ -1,28 +1,42 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { expenseActions } from "../Store/Expense-slice";
 
 function ExpenseItem({ expense }) {
   const dispatch = useDispatch();
+    const API_KEY = import.meta.env.VITE_FIREBASE_DB_URL;
+    const userId = useSelector((state) => state.auth.userId);
 
   const editHandler = () => {
     dispatch(expenseActions.startEdit(expense));
   };
 
-  const deleteHandler = () => {
-    dispatch(expenseActions.deleteExpense(expense.id));
+  const deleteHandler = async () => {
+    try {
+      const res = await fetch(
+        `${API_KEY}/expense/${userId}/${expense.id}.json`,
+        {
+          method: "DELETE",
+        },
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to delete expense");
+      }
+
+      dispatch(expenseActions.deleteExpense(expense.id));
+    } catch (err) {
+      console.log(err.message);
+    }
   };
+
 
   return (
     <div className="flex items-center justify-between border border-gray-200 rounded-lg bg-white p-5">
       <div>
-        <h3 className="text-xl font-bold text-gray-800">
-          ₹{expense.amount}
-        </h3>
+        <h3 className="text-xl font-bold text-gray-800">₹{expense.amount}</h3>
 
-        <p className="mt-1 text-gray-600">
-          {expense.description}
-        </p>
+        <p className="mt-1 text-gray-600">{expense.description}</p>
       </div>
 
       <div className="flex items-center gap-6">

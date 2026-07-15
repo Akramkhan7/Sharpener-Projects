@@ -1,13 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-
-
-
-
 const expenseSlice = createSlice({
   name: "expenses",
   initialState: {
-    expenses: localStorage.getItem('expenses') || [],
+    expenses: localStorage.getItem("expenses") || [],
     totalAmount: 0,
     editingExpense: null,
   },
@@ -17,7 +13,7 @@ const expenseSlice = createSlice({
 
       state.totalAmount = action.payload.reduce(
         (sum, expense) => sum + Number(expense.amount),
-        0
+        0,
       );
     },
 
@@ -28,18 +24,18 @@ const expenseSlice = createSlice({
 
     deleteExpense(state, action) {
       state.expenses = state.expenses.filter(
-        (expense) => expense.id !== action.payload
+        (expense) => expense.id !== action.payload,
       );
 
       state.totalAmount = state.expenses.reduce(
         (sum, expense) => sum + Number(expense.amount),
-        0
+        0,
       );
     },
 
     editExpense(state, action) {
       const index = state.expenses.findIndex(
-        (expense) => expense.id === action.payload.id
+        (expense) => expense.id === action.payload.id,
       );
 
       if (index !== -1) {
@@ -48,7 +44,7 @@ const expenseSlice = createSlice({
 
       state.totalAmount = state.expenses.reduce(
         (sum, expense) => sum + Number(expense.amount),
-        0
+        0,
       );
     },
 
