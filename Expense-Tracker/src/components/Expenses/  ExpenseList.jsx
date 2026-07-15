@@ -1,27 +1,25 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import ExpenseItem from './ ExpenseItem'
+import ExpenseItem from "./ ExpenseItem";
 import { themeActions } from "../Store/Theme-slice";
 
 function ExpenseList() {
-  const dispatch =useDispatch();
+  const dispatch = useDispatch();
   const expenses = useSelector((state) => state.expenses.expenses);
   const premium = useSelector((state) => state.theme.premium);
 
-  const totalExpense = useSelector(
-    (state) => state.expenses.totalAmount
-  );
+  const totalExpense = useSelector((state) => state.expenses.totalAmount);
 
   return (
     <div className="max-w-3xl mx-auto mt-8 ">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">
-          Expense Tracker
-        </h2>
+        <h2 className="text-2xl font-bold text-gray-800">Expense Tracker</h2>
 
         {totalExpense > 10000 && !premium && (
-          <button className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg"
-          onClick={()=>dispatch(themeActions.activatePremium())}>
+          <button
+            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg"
+            onClick={() => dispatch(themeActions.activatePremium())}
+          >
             Activate Premium
           </button>
         )}

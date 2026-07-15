@@ -9,7 +9,6 @@ function Profile() {
   const photoRef = useRef();
 
   const idToken = useSelector((state) => state.auth.token);
-  console.log(idToken);
 
   const API_KEY = import.meta.env.VITE_FIREBASE_API_KEY;
 
@@ -38,7 +37,6 @@ function Profile() {
 
 
       const data = await response.json();
-      console.log(data);
 
       if (!response.ok) {
         throw new Error(data.error.message);

@@ -64,7 +64,8 @@ function ExpenseForm(props) {
         setIsLoading(false);
       }
     } else {
-      // for updating exist expenses
+
+      // for updating expense
       try {
         setIsLoading(true);
         const res = await fetch(
@@ -87,7 +88,6 @@ function ExpenseForm(props) {
         }
 
         // update local state
-
         dispatch(
           expenseActions.editExpense({
             id: editingExpense.id,

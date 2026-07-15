@@ -23,7 +23,6 @@ function customRender(ui, options) {
   return render(ui, { wrapper: AllProviders, ...options });
 }
 
-// re-export everything from RTL
 export * from "@testing-library/react";
 // override render with our custom, provider-wrapped version
 export { customRender as render };
