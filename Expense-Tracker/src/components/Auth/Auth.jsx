@@ -51,8 +51,6 @@ function Auth() {
         );
       }
 
-
-
       const token = await userCredential.user.getIdToken();
 
       localStorage.setItem("token", token);
@@ -137,19 +135,17 @@ function Auth() {
               {isLogin ? "Login" : "Sign Up"}
             </button>
 
-
-             {isLogin && (
-            <p className="text-center">
-              <Link
-                to="/forgot-password"
-                className="text-blue-600 hover:underline text-sm"
-              >
-                Forgot Password?
-              </Link>
-            </p>
-          )}
+            {isLogin && (
+              <p className="text-center">
+                <Link
+                  to="/forgot-password"
+                  className="text-blue-600 hover:underline text-sm"
+                >
+                  Forgot Password?
+                </Link>
+              </p>
+            )}
           </form>
-         
         </div>
 
         <div className="mt-6 bg-white shadow rounded-lg p-4 text-center">

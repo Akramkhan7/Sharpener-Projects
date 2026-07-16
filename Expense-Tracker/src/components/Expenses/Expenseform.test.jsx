@@ -4,7 +4,6 @@ import userEvent from "@testing-library/user-event";
 import ExpenseForm from "./ ExpenseForm"
 import { expenseActions } from "../Store/Expense-slice";
 
-// so we replace them with simple mocks we control.
 const mockDispatch = vi.fn();
 let editingExpense = null;
 

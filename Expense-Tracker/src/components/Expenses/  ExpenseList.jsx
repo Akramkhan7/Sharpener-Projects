@@ -39,7 +39,7 @@ function ExpenseList() {
             <ExpenseItem key={expense.id} expense={expense} />
           ))}
         </div>
-      )}
+      )}     
     </div>
   );
 }
