@@ -1,12 +1,12 @@
 import { Switch, Route, Redirect } from "react-router-dom";
 import { useSelector } from "react-redux";
-import Auth from "./components/Auth";
-import Home from "./components/Pages/Home";
-import ComposeMail from "./components/Pages/ComposeMail";
-import Inbox from "./components/Mail/Inbox";
-import MailDetails from "./components/Pages/MailDetails";
-import SentDetails from "./components/Pages/SentDetails.jsx"
-import Sent from "./components/Pages/Sent";
+import Auth from "./components/Auth.jsx";
+import Home from "./components/Pages/Home.jsx";
+import ComposeMail from "./components/Pages/ComposeMail.jsx";
+import Inbox from "./components/Mail/Inbox.jsx";
+import MailDetails from "./components/Pages/MailDetails.jsx";
+import SentDetails from "./components/Pages/SentDetails.jsx.jsx"
+import Sent from "./components/Pages/Sent.jsx";
 
 function App() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
