@@ -1,0 +1,61 @@
+import Button from "react-bootstrap/Button";
+import Navbar from "react-bootstrap/Navbar";
+import Container from "react-bootstrap/Container";
+import Nav from "react-bootstrap/Nav";
+import { useContext } from "react";
+import { NavLink, useLocation } from "react-router-dom";
+import CartContext from "../Store/CartContext";
+import Login from "../Pages/Login";
+
+function Header({ onShow }) {
+  const cartCtx = useContext(CartContext);
+  const len =
+    cartCtx?.items?.reduce((total, item) => total + (item.quantity || 1), 0) ?? 0;
+  const location = useLocation();
+  const showCartButton = location.pathname === "/store";
+
+  return (
+   <Navbar bg="dark" variant="dark" expand="lg">
+  <Container>
+    <Navbar.Brand as={NavLink} to="/">
+      The Generics
+    </Navbar.Brand>
+
+    <Nav className="mx-auto">
+        <Nav.Link as={NavLink} exact to="/">
+        Home
+      </Nav.Link>
+
+ <Nav.Link as={NavLink} exact to="/products">
+       Products
+      </Nav.Link>
+
+       <Nav.Link as={NavLink} exact to="/store">
+        Store
+      </Nav.Link>
+
+        <Nav.Link as={NavLink} exact to="/about">
+        About
+      </Nav.Link>
+
+       <Nav.Link as={NavLink} exact to="/contact">
+        Contact Us
+      </Nav.Link>
+
+      <Nav.Link as={NavLink} exact to="/auth">
+       Login
+      </Nav.Link>
+
+    </Nav>
+
+    {showCartButton && (
+      <Button variant="outline-light" onClick={onShow}>
+        Cart ({len})
+      </Button>
+    )}
+  </Container>
+</Navbar>
+  );
+}
+
+export default Header;
