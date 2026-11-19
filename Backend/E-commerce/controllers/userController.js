@@ -1,19 +1,20 @@
-const getUser = (req, res) => {
-    const id = req.params.id;
-    res.send(`Fetch a user with ID: ${id}`);
+
+const getAllUsers = (req, res) => {
+    res.send("Fetching all users");
 };
 
-const createUser = (req, res) => {
-    res.send('Add a new user.');
+const addUser = (req, res) => {
+    res.send("Adding a new user");
 };
 
 const getUserById = (req, res) => {
     const id = req.params.id;
-    res.send(`Fetch a user with ID: ${id}`);
+
+    res.send(`Fetching user with ID: ${id}`);
 };
 
 module.exports = {
-    getUser,
-    createUser,
+    getAllUsers,
+    addUser,
     getUserById
 };
