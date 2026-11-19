@@ -1,5 +1,5 @@
 const express = require("express");
-const productRoutes = require("./routes/product");
+const bookRoutes = require("./routes/book");
 const categoriesRoutes = require("./routes/categories");
 const app = express();
 
@@ -7,13 +7,13 @@ const app = express();
 
 //middleware
 
-app.use('/products', (req, res, next) => {
- console.log(`${req.method} request made to ${req.url}`);
-  next();
-});
+// app.use('/products', (req, res, next) => {
+//  console.log(`${req.method} request made to ${req.url}`);
+//   next();
+// });
 
-
-app.use('/products', productRoutes);
+app.use(express.json());
+app.use('/books', bookRoutes);
 app.use('/categories', categoriesRoutes);
 
 
