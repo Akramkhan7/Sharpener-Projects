@@ -1,4 +1,6 @@
 const express = require("express");
+const productRoutes = require("./routes/product");
+const categoriesRoutes = require("./routes/categories");
 const app = express();
 
 
@@ -11,30 +13,9 @@ app.use('/products', (req, res, next) => {
 });
 
 
-app.get("/products", (req, res) => {
-  res.send({
-    message: "Here is the list of all products.",
-  });
-});
+app.use('/products', productRoutes);
+app.use('/categories', categoriesRoutes);
 
-app.post("/products", (req, res) => {
-  res.send({
-    message: "A new product has been added."
-  });
-});
-
-app.get("/categories", (req, res) => {
-  res.send({
-    message: "Here is the list of all categories."
-  });
-});
-
-
-app.post("/categories", (req, res) => {
-  res.send({
-    message: "A new category has been created."
-  });
-});
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
