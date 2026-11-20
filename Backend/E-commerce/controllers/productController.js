@@ -17,6 +17,11 @@ const getProductById = (req, res) => {
   res.send(result);
 };
 
+const postProduct = (req, res) => {
+   const data = req.body;
+   res.json({value: data.productName })
+};
+
 const getAddProduct = (req, res) => {
   res.sendFile(
     path.join(__dirname, '..', 'view', 'addProduct.html')
@@ -24,6 +29,7 @@ const getAddProduct = (req, res) => {
 };
 
 module.exports = {
+    postProduct,
   getAddProduct,
   getAllProducts,
   addProduct,

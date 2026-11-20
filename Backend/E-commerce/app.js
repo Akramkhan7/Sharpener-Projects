@@ -5,7 +5,7 @@ const productRoutes = require("./routes/productRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 
 // Parse form data
-app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
 app.use(express.json());
 
 app.use("/users", userRoutes);
