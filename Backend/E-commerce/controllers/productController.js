@@ -17,14 +17,14 @@ const getProductById = (req, res) => {
   res.send(result);
 };
 
-const getProductsByUser = (req, res) => {
+const getAddProduct = (req, res) => {
   res.sendFile(
-    path.join(__dirname, '..', 'view', 'product.html')
+    path.join(__dirname, '..', 'view', 'addProduct.html')
 );
 };
 
 module.exports = {
-  getProductsByUser,
+  getAddProduct,
   getAllProducts,
   addProduct,
   getProductById,

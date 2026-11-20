@@ -6,7 +6,7 @@ const {
     getAllProducts,
     addProduct,
     getProductById,
-    getProductsByUser
+    getAddProduct,
 } = require('../controllers/productController');
 
 router.get('/', getAllProducts);
@@ -14,7 +14,7 @@ router.get('/', getAllProducts);
 router.post('/', addProduct);
 
 // Specific route first
-router.get('/page', getProductsByUser);
+router.get('/addProduct', getAddProduct);
 
 // Dynamic route last
 router.get('/:id', getProductById);
